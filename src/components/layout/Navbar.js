@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -6,6 +6,7 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import TopBar from "./TopBar";
 import MiddleBar from "./MiddleBar";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,9 +56,14 @@ export default function Navbar() {
               transition={{ duration: 0.3 }}
             >
               <Link href="/" className="flex items-center space-x-2">
-                <span className={`text-2xl font-bold ${isScrolled ? 'text-white' : 'text-red-600'}`}>
-                  Trade Finance
-                </span>
+                <Image
+                  src="/tdlogo.png"
+                  alt="Trade Finance Logo"
+                  width={isScrolled ? 60 : 60}
+                  height={isScrolled ? 30 : 30}
+                  className="transition-all duration-300"
+                  priority
+                />
               </Link>
             </motion.div>
 
@@ -68,28 +74,28 @@ export default function Navbar() {
                   key={item.name}
                   href={item.path}
                   className={`${
-                    isScrolled 
-                      ? 'text-gray-300 hover:text-red-500' 
-                      : 'text-gray-800 hover:text-red-600'
+                    isScrolled
+                      ? "text-gray-300 hover:text-red-500"
+                      : "text-gray-800 hover:text-red-600"
                   } transition-colors duration-300`}
                 >
                   {item.name}
                 </Link>
               ))}
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center justify-between space-x-4">
                 <Link
                   href="/auth/login"
                   className={`px-4 py-2 rounded-md transition-all duration-300 ${
                     isScrolled
-                      ? 'text-white border-red-500 border hover:bg-red-500'
-                      : 'text-red-600 border-red-600 border hover:bg-red-50'
+                      ? "text-white border-red-500 border hover:bg-red-500"
+                      : "text-red-600 border-red-600 border hover:bg-red-50"
                   }`}
                 >
                   Log In
                 </Link>
                 <Link
                   href="/auth/signup"
-                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-300"
+                  className="px-4  pl-4 py-2 bg-red-600 text-white rounded-r-md hover:bg-red-700 transition-colors duration-300"
                 >
                   Sign Up
                 </Link>
@@ -100,7 +106,9 @@ export default function Navbar() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsOpen(!isOpen)}
-              className={`lg:hidden ${isScrolled ? 'text-white' : 'text-gray-800'}`}
+              className={`lg:hidden ${
+                isScrolled ? "text-white" : "text-gray-800"
+              }`}
             >
               {isOpen ? (
                 <HiX className="h-6 w-6" />
@@ -113,7 +121,11 @@ export default function Navbar() {
           {/* Mobile Navigation Menu */}
           <motion.div
             initial={false}
-            animate={isOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+            animate={
+              isOpen
+                ? { height: "auto", opacity: 1 }
+                : { height: 0, opacity: 0 }
+            }
             transition={{ duration: 0.3 }}
             className="lg:hidden overflow-hidden bg-white"
           >
@@ -128,22 +140,26 @@ export default function Navbar() {
                   {item.name}
                 </Link>
               ))}
-              <div className="fex flex-col space-y-2 px-3 py-2">
+
+              <>
                 <Link
                   href="/auth/login"
-                  className="px-4 py-2 text-center text-red-600 border border-red-600 rounded-md hover:bg-red-50"
-                  onClick={() => setIsOpen(false)}
+                  className={`px-4 py-2 rounded-md mr-4 transition-all duration-300 ${
+                    isScrolled
+                      ? "text-red-500 border-red-500 border hover:bg-red-500"
+                      : "text-red-600 border-red-600 border hover:bg-red-50"
+                  }`}
                 >
                   Log In
                 </Link>
+
                 <Link
                   href="/auth/signup"
-                  className="px-4 py-2 text-center bg-red-600 text-white rounded-md hover:bg-red-700"
-                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-300"
                 >
                   Sign Up
                 </Link>
-              </div>
+              </>
             </div>
           </motion.div>
         </nav>

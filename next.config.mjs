@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['trade-finance.org'],
+        domains: ['trade-finance.org', 'images.ctfassets.net'],
       },
 };
 

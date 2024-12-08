@@ -1,37 +1,33 @@
-"use client"
-import { Inter } from 'next/font/google'
-import { usePathname } from 'next/navigation'
 import './globals.css'
-import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
-import ScrollToTop from '@/components/layout/ScrollToTop'
-import ChatBot from '@/components/ChatBot/ChatBot'
-import TransactionNotification from '@/components/ui/TransactionNotification/TransactionNotification'
+import ClientLayout from '@/components/ClientLayout/ClientLayout'
+import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
 
 
+export const metadata = {
+  title: {
+    default: 'Trade Finance | AI-Powered Trading Platform',
+    template: '%s | Trade Finance'
+  },
+  description: 'Trade Finance offers advanced AI-driven trading solutions with secure investment plans.',
+  icons: {
+    icon: [
+      { url: '/tdlogo.png', sizes: '32x32', type: 'image/png' },
+      { url: '/tdlogo.png', sizes: '16x16', type: 'image/png' }
+    ],
+    shortcut: '/tdlogo.png',
+    apple: { url: '/tdlogo.png', sizes: '180x180', type: 'image/png' },
+  }
+}
 
 export default function RootLayout({ children }) {
-  const pathname = usePathname()
-  const isDashboard = pathname?.includes('/dashboard')
-
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {!isDashboard && <Navbar />}
-        <main className={!isDashboard ? "pt-16 md:pt-[144px]" : ""}>
-          {children}
-        </main>
-        {!isDashboard && (
-          <>
-            <Footer />
-          </>
-        )}
-            <ScrollToTop />
-            <ChatBot/>
-            <TransactionNotification />
+      <body className={inter.className} suppressHydrationWarning>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   )
 }
+

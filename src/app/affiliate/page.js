@@ -1,7 +1,7 @@
 "use client"
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-
+import Head from 'next/head'
 
 const affiliateBanks = [
   {
@@ -56,6 +56,29 @@ const affiliateBanks = [
 
 export default function Affiliate() {
   return (
+    <>
+    <Head>
+      <title>Banking Partners & Affiliates | Trade Finance</title>
+      <meta name="description" content="Discover Trade Finance's global banking partnerships with leading institutions like Deutsche Bank, HSBC, Barclays, and more. Access international markets with enhanced security and premium services." />
+      
+      {/* Open Graph */}
+      <meta property="og:title" content="Banking Partners & Affiliates | Trade Finance" />
+      <meta property="og:description" content="Partner with world-class financial institutions through Trade Finance's extensive global banking network." />
+      <meta property="og:image" content="/affiliatebanks.png" />
+      <meta property="og:type" content="website" />
+      
+      {/* Twitter */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Banking Partners & Affiliates | Trade Finance" />
+      <meta name="twitter:description" content="Access premium banking services through our partnerships with Deutsche Bank, HSBC, Barclays, and more." />
+      <meta name="twitter:image" content="/affiliatebanks.png" />
+      
+      {/* Additional SEO */}
+      <meta name="keywords" content="banking partners, affiliate banks, Deutsche Bank, HSBC, Barclays, global banking, financial partnerships, trade finance partners" />
+      <link rel="canonical" href="https://tradefinance.com/affiliate" />
+    </Head>
+
+
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="relative h-[40vh]   md:h-[100vh] overflow-hidden">
@@ -75,44 +98,6 @@ export default function Affiliate() {
             >
               
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Partners Grid */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-center max-w-3xl mx-auto mb-16"
-          >
-            <h2 className="text-2xl md:text-4xl font-bold mb-6 text-gray-900 font-serif">
-            Our Global Banking Partners
-            </h2>
-            <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
-              Our strategic partnerships with these prestigious financial institutions enable us to provide unparalleled services and solutions to our clients worldwide.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {affiliateBanks.map((bank, index) => (
-              <motion.div
-                key={bank.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-gray-50 rounded-2xl p-8 hover:shadow-xl transition-shadow duration-300"
-              >
-                <h3 className="text-xl md:text-2xl font-bold mb-4 text-gray-900 font-serif">
-                  {bank.name}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {bank.description}
-                </p>
-              </motion.div>
-            ))}
           </div>
         </div>
       </section>
@@ -166,7 +151,46 @@ export default function Affiliate() {
           </div>
         </div>
       </section>
+
+      {/* Partners Grid */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-center max-w-3xl mx-auto mb-16"
+          >
+            <h2 className="text-2xl md:text-4xl font-bold mb-6 text-gray-900 font-serif">
+            Our Global Banking Partners
+            </h2>
+            <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
+              Our strategic partnerships with these prestigious financial institutions enable us to provide unparalleled services and solutions to our clients worldwide.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {affiliateBanks.map((bank, index) => (
+              <motion.div
+                key={bank.name}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-gray-50 rounded-2xl p-8 hover:shadow-xl transition-shadow duration-300"
+              >
+                <h3 className="text-xl md:text-2xl font-bold mb-4 text-gray-900 font-serif">
+                  {bank.name}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {bank.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
+    </>
   )
 }
 

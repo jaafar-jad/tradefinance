@@ -21,7 +21,7 @@ const faqData = [
     // Returns & ROI
     {
       question: "What kind of returns can I expect?",
-      answer: "Returns vary by plan: Weekly plans offer 3-7% ROI, Medium plans offer 30-100% total ROI, and our Enterprise Annual plan offers up to 300% total ROI over 12 months."
+      answer: "Returns vary by plan: Weekly plans offer 3-7% ROI, Medium plans offer 30-100% total ROI, and our Enterprise Annual plan offers up to 150% total ROI over 12 months."
     },
     {
       question: "Are the returns guaranteed?",

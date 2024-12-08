@@ -41,7 +41,7 @@ export default function Charts() {
   }
 
   return (
-    <div className="space-y-3 md:space-y-4">
+    <div className="space-y-2 md:space-y-2 ">
       {/* Chart Toggle Buttons */}
       <div className="grid grid-cols-3 gap-2 md:gap-4 bg-gradient-to-r from-red-900 via-red-800 to-red-900 p-2 rounded-lg">
   {chartButtons.map((button) => (

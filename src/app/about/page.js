@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { FaShieldAlt, FaChartLine, FaUsers, FaGlobe, FaChartBar, FaBuilding, FaHome, FaBitcoin } from 'react-icons/fa'
 import Image from 'next/image'
+import Head from 'next/head'
 import TfAbout from "../../../public/tfabout.png"
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -146,6 +147,35 @@ const team = [
 
 
     return (
+      <>
+      <Head>
+        <title>About Trade Finance | Global Investment & Trading Solutions</title>
+        <meta name="description" content="Trade Finance - Leading the revolution in digital asset management and cryptocurrency trading. Serving 150+ countries with $204.9M total deposits and 99.9% success rate." />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="About Trade Finance | Global Investment & Trading Solutions" />
+        <meta property="og:description" content="Discover how Trade Finance is revolutionizing digital asset management with AI-powered trading, serving clients across 150+ countries with military-grade security." />
+        <meta property="og:image" content="/tfabout.png" />
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About Trade Finance | Global Investment & Trading Solutions" />
+        <meta name="twitter:description" content="Discover how Trade Finance is revolutionizing digital asset management with AI-powered trading, serving clients across 150+ countries with military-grade security." />
+        <meta name="twitter:image" content="/tfabout.png" />
+        
+        {/* Additional SEO tags */}
+        <meta name="keywords" content="trade finance, cryptocurrency trading, digital asset management, investment solutions, global trading, blockchain technology, financial services" />
+        <meta name="author" content="Trade Finance" />
+        <meta name="robots" content="index, follow" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="canonical" href="https://tradefinance.com/about" />
+        
+        {/* Language and locale */}
+        <meta property="og:locale" content="en_US" />
+        <meta httpEquiv="content-language" content="en-us" />
+      </Head>
+
       <div className="min-h-screen">
         {/* Hero Section */}
         <motion.section 
@@ -421,6 +451,7 @@ const team = [
           </div>
         </motion.section>
       </div>
+      </>
     )
   }
   

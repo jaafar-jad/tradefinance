@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaPhone } from 'react-icons/fa'
+import Head from 'next/head'
 
 export default function Signup() {
   const router = useRouter()
@@ -70,8 +71,33 @@ export default function Signup() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cover bg-center" 
-         style={{ backgroundImage: "url('/signup.jpeg')" }}>
+    <>
+    <Head>
+      <title>Create Account | Trade Finance - Start Your Trading Journey</title>
+      <meta name="description" content="Join Trade Finance platform. Create your account to access AI-powered trading, secure investments, and professional portfolio management." />
+      
+      {/* Open Graph */}
+      <meta property="og:title" content="Sign Up - Trade Finance Platform" />
+      <meta property="og:description" content="Create your Trade Finance account and start your investment journey today." />
+      <meta property="og:type" content="website" />
+      
+      {/* Twitter */}
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:title" content="Join Trade Finance" />
+      <meta name="twitter:description" content="Register for a Trade Finance account to access advanced trading features." />
+      
+      {/* Security Headers */}
+      <meta name="robots" content="noindex, nofollow" />
+      <meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
+      
+      {/* Mobile Optimization */}
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+      <meta name="format-detection" content="telephone=no" />
+      
+      <link rel="canonical" href="https://tradefinance.com/auth/signup" />
+    </Head>
+
+    <div className="min-h-screen flex items-center justify-center bg-cover bg-center bg-gradient-to-br from-red-900 via-black to-red-900">
       <div className="absolute inset-0 "></div>
       
       <motion.div 
@@ -245,6 +271,7 @@ export default function Signup() {
         </div>
       </motion.div>
     </div>
+    </>
   )
 }
 

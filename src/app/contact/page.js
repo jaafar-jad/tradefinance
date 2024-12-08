@@ -2,7 +2,7 @@
 import { motion , AnimatePresence} from 'framer-motion'
 import { FaEnvelope, FaTwitter, FaDiscord, FaTelegram, FaRobot, FaComments,FaTimes } from 'react-icons/fa'
 import { useState , useRef , useEffect} from 'react'
-
+import Head from 'next/head'
 const socialLinks = [
   {
     name: 'Email',
@@ -34,11 +34,11 @@ const faqData = [
     // Investment Plans & Pricing
     {
       question: "What is the minimum investment amount?",
-      answer: "Our minimum investment starts at $100 with our Starter Weekly plan, scaling up to $50,000+ for our Enterprise Annual plan."
+      answer: "Our minimum investment starts at $500 with our Starter plan, scaling up to an unlimited amount for our Premium  plan."
     },
     {
       question: "What are the different investment plans available?",
-      answer: "We offer three categories of plans: Small Plans (Weekly), Medium Plans (1-3 Months), and Large Plans (6-12 Months). Each category is designed for different investment goals and capital ranges."
+      answer: "We offer three categories of plans: Starter Plans (6 months), Basic Plans (4 Months), and Premium Plans (2 Months). Each category is designed for different investment goals and capital ranges."
     },
     {
       question: "Can I upgrade my investment plan?",
@@ -48,7 +48,7 @@ const faqData = [
     // Returns & ROI
     {
       question: "What kind of returns can I expect?",
-      answer: "Returns vary by plan: Weekly plans offer 3-7% ROI, Medium plans offer 30-100% total ROI, and our Enterprise Annual plan offers up to 300% total ROI over 12 months."
+      answer: "Returns vary by plan: Stater plans offer 150% ROI, Basic plans offer 150% total ROI, and our Premium plans offers up to 150% as well."
     },
     {
       question: "Are the returns guaranteed?",
@@ -58,7 +58,7 @@ const faqData = [
     // Withdrawals & Payments
     {
       question: "When can I withdraw my profits?",
-      answer: "Withdrawals are available after your plan duration completes: Weekly plans after 1-2 weeks, Medium plans after 1-3 months, and Large plans after 6-12 months as per your chosen duration."
+      answer: "Withdrawals are available after your plan duration completes."
     },
     {
       question: "What is the withdrawal process?",
@@ -86,7 +86,7 @@ const faqData = [
     },
     {
       question: "What kind of support do you offer?",
-      answer: "Support varies by plan: Basic email support for Weekly plans, priority support for Medium plans, and dedicated account managers for Enterprise clients."
+      answer: "Support varies by plan: Basic email support for Starter plans, priority support for Basic plans, and dedicated account managers for Enterprise clients."
     },
   
     // Trading & Strategy
@@ -96,7 +96,7 @@ const faqData = [
     },
     {
       question: "Can I choose my own trading strategy?",
-      answer: "Enterprise and Expert Quarterly plan members can work with their account managers to customize certain aspects of their trading strategy."
+      answer: "Basic and Premium Quarterly plan members can work with their account managers to customize certain aspects of their trading strategy."
     },
   
     // Referral Program
@@ -253,6 +253,32 @@ export default function Contact() {
     )
 
   return (
+    <>
+      <Head>
+        <title>Contact Trade Finance | 24/7 Support & FAQ</title>
+        <meta name="description" content="Get in touch with Trade Finance through multiple channels including email, Twitter, Discord, and Telegram. Access our FAQ section and AI chatbot for instant support." />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Contact Trade Finance | 24/7 Support & FAQ" />
+        <meta property="og:description" content="Connect with Trade Finance's support team through various channels. Get instant answers to your investment and trading questions." />
+        <meta property="og:type" content="website" />
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Contact Trade Finance Support" />
+        <meta name="twitter:description" content="Get instant support through our AI chatbot or connect with our team via email, Twitter, Discord, or Telegram." />
+        
+        {/* Additional SEO */}
+        <meta name="keywords" content="trade finance support, investment FAQ, trading support, contact us, customer service, financial assistance, trading help" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://tradefinance.com/contact" />
+        
+        {/* Social Media Links Verification */}
+        <meta name="twitter:site" content="@tradefinance" />
+        <meta name="discord:server" content="tradefinance" />
+        <meta name="telegram:channel" content="tradefinance" />
+      </Head>
+
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-red-800 via-black to-red-900 h-[40vh] md:h-[80vh] pt-32 md:pt-40">
@@ -375,27 +401,7 @@ export default function Contact() {
         )}
       </AnimatePresence>
 
-      {/* Floating Chat Bot Button */}
-      <motion.button
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => {
-          setIsChatOpen(!isChatOpen)
-          if (!isChatOpen) {
-            setChatMessages([{
-              type: 'bot',
-              content: "Hello! I'm your Trade Finance Assistant. How can I help you today?",
-              options: Object.keys(faqCategories)
-            }])
-            setSelectedCategory(null)
-          }
-        }}
-        className="fixed bottom-8 left-8 bg-red-600 text-white p-4 rounded-full shadow-lg z-50"
-      >
-        {isChatOpen ? <FaComments className="text-2xl" /> : <FaRobot className="text-2xl" />}
-      </motion.button>
     </div>
+    </>
   )
 }

@@ -1,12 +1,15 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Head from 'next/head'
 import {
   FaRocket,
   FaChartLine,
   FaCrown,
   FaGem,
   FaCalculator,
+  FaUsers,
+  FaUserFriends
 } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import {
@@ -18,188 +21,170 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-const Chart = dynamic(
-  () =>
-    import("recharts").then((mod) => ({
-      LineChart: mod.LineChart,
-      Line: mod.Line,
-      XAxis: mod.XAxis,
-      YAxis: mod.YAxis,
-      CartesianGrid: mod.CartesianGrid,
-      Tooltip: mod.Tooltip,
-      ResponsiveContainer: mod.ResponsiveContainer,
-    })),
-  { ssr: false }
-);
+import { investmentPlans } from '@/config/investmentPlans'
+
 
 const plans = [
-  // Small Plans (Weekly)
+  // Single Plans
   {
-    name: "Starter Weekly",
+    name: investmentPlans.single.starter.name,
     icon: <FaRocket className="text-4xl text-white" />,
-    duration: "1 Week",
-    roi: "3% Weekly ROI",
-    weeklyRoi: "3%",
-    minimum: "$100",
-    maximum: "$999",
+    duration: `${investmentPlans.single.starter.duration} Months`,
+    roi: `${investmentPlans.single.starter.roi}% Total ROI`,
+    monthlyRoi: `${investmentPlans.single.starter.dailyBonus}% Daily`,
+    minimum: `$${investmentPlans.single.starter.minAmount}`,
+    maximum: `$${investmentPlans.single.starter.maxAmount}`,
     referral: "5%",
     features: [
+      `${investmentPlans.single.starter.dailyBonus}% Daily Bonus`,
       "Basic Portfolio Access",
-      "Weekly Market Updates",
       "Email Support",
       "Basic Trading Tools",
     ],
     color: "from-red-500 to-red-400",
     popular: false,
-    category: "small",
+    category: "single",
   },
   {
-    name: "Growth Weekly",
+    name: investmentPlans.single.basic.name,
     icon: <FaChartLine className="text-4xl text-white" />,
-    duration: "2 Weeks",
-    roi: "7% Total ROI",
-    weeklyRoi: "3.5%",
-    minimum: "$1,000",
-    maximum: "$2,999",
+    duration: `${investmentPlans.single.basic.duration} Months`,
+    roi: `${investmentPlans.single.basic.roi}% Total ROI`,
+    monthlyRoi: `${investmentPlans.single.basic.dailyBonus}% Daily`,
+    minimum: `$${investmentPlans.single.basic.minAmount}`,
+    maximum: `$${investmentPlans.single.basic.maxAmount}`,
     referral: "5%",
     features: [
+      `${investmentPlans.single.basic.dailyBonus}% Daily Bonus`,
       "Enhanced Portfolio Tools",
-      "Bi-Weekly Reports",
-      "Priority Email Support",
-      "Advanced Charts",
+      "Priority Support",
+      "Advanced Trading Features",
     ],
     color: "from-red-600 to-red-500",
-    popular: false,
-    category: "small",
+    popular: true,
+    category: "single",
   },
-  // Medium Plans (1-3 Months)
   {
-    name: "Professional Monthly",
+    name: investmentPlans.single.premium.name,
     icon: <FaCrown className="text-4xl text-white" />,
-    duration: "1-3 Months",
-    roi: "30% Total ROI",
-    monthlyRoi: "10%",
-    minimum: "$3,000",
-    maximum: "$9,999",
+    duration: `${investmentPlans.single.premium.duration} Months`,
+    roi: `${investmentPlans.single.premium.roi}% Total ROI`,
+    monthlyRoi: `${investmentPlans.single.premium.dailyBonus}% Daily`,
+    minimum: `$${investmentPlans.single.premium.minAmount}`,
+    maximum: `$${investmentPlans.single.premium.maxAmount === Infinity ? 'Unlimited' : `$${investmentPlans.single.premium.maxAmount}`}`,
     referral: "5%",
     features: [
-      "Professional Trading Suite",
-      "Monthly Strategy Review",
-      "24/7 Support Access",
-      "Risk Management Tools",
-      "Portfolio Rebalancing",
-    ],
-    color: "from-red-700 to-red-600",
-    popular: false,
-    category: "medium",
-  },
-  {
-    name: "Expert Quarterly",
-    icon: <FaGem className="text-4xl text-white" />,
-    duration: "3 Months",
-    roi: "100% Total ROI",
-    monthlyRoi: "33.33%",
-    minimum: "$10,000",
-    maximum: "$49,999",
-    referral: "5%",
-    features: [
-      "Expert Trading Systems",
-      "Quarterly Performance Review",
-      "VIP Support Channel",
+      `${investmentPlans.single.premium.dailyBonus}% Daily Bonus`,
+      "Premium Trading Suite",
+      "VIP Support",
       "Advanced AI Trading",
       "Custom Strategies",
     ],
-    color: "from-red-800 to-red-700",
+    color: "from-red-700 to-red-600",
     popular: false,
-    category: "medium",
+    category: "single",
   },
-  // Large Plans (3-12 Months)
+  
+  // Couple Plans
   {
-    name: "Enterprise Annual",
-    icon: <FaGem className="text-4xl text-white" />,
-    duration: "6-12 Months",
-    roi: "300% Total ROI",
-    monthlyRoi: "25%",
-    minimum: "$50,000",
-    maximum: "Unlimited",
+    name: investmentPlans.couple.starter.name,
+    icon: <FaUsers className="text-4xl text-white" />,
+    duration: `${investmentPlans.couple.starter.duration} Months`,
+    roi: `${investmentPlans.couple.starter.roi}% Total ROI`,
+    monthlyRoi: `${investmentPlans.couple.starter.dailyBonus}% Daily`,
+    minimum: `$${investmentPlans.couple.starter.minAmount}`,
+    maximum: `$${investmentPlans.couple.starter.maxAmount}`,
     referral: "5%",
     features: [
-      "Enterprise-Grade Tools",
-      "Dedicated Account Manager",
-      "Custom API Access",
-      "Institutional Trading",
-      "Tax Advisory",
-      "Private Events Access",
+      `${investmentPlans.couple.starter.dailyBonus}% Daily Bonus`,
+      `${investmentPlans.couple.starter.coupleBonus}% Couple Bonus`,
+      "Joint Portfolio Access",
+      "Couple Support",
     ],
-    color: "from-black to-red-900",
+    color: "from-red-500 to-red-400",
+    popular: false,
+    category: "couple",
+  },
+  {
+    name: investmentPlans.couple.basic.name,
+    icon: <FaUserFriends className="text-4xl text-white" />,
+    duration: `${investmentPlans.couple.basic.duration} Months`,
+    roi: `${investmentPlans.couple.basic.roi}% Total ROI`,
+    monthlyRoi: `${investmentPlans.couple.basic.dailyBonus}% Daily`,
+    minimum: `$${investmentPlans.couple.basic.minAmount}`,
+    maximum: `$${investmentPlans.couple.basic.maxAmount}`,
+    referral: "5%",
+    features: [
+      `${investmentPlans.couple.basic.dailyBonus}% Daily Bonus`,
+      `${investmentPlans.couple.basic.coupleBonus}% Couple Bonus`,
+      "Enhanced Joint Tools",
+      "Priority Couple Support",
+    ],
+    color: "from-red-600 to-red-500",
     popular: true,
-    category: "large",
+    category: "couple",
+  },
+  {
+    name: investmentPlans.couple.premium.name,
+    icon: <FaGem className="text-4xl text-white" />,
+    duration: `${investmentPlans.couple.premium.duration} Months`,
+    roi: `${investmentPlans.couple.premium.roi}% Total ROI`,
+    monthlyRoi: `${investmentPlans.couple.premium.dailyBonus}% Daily`,
+    minimum: `$${investmentPlans.couple.premium.minAmount}`,
+    maximum: `${investmentPlans.couple.premium.maxAmount === Infinity ? 'Unlimited' : `$${investmentPlans.couple.premium.maxAmount}`}`,
+    referral: "5%",
+    features: [
+      `${investmentPlans.couple.premium.dailyBonus}% Daily Bonus`,
+      `${investmentPlans.couple.premium.coupleBonus}% Couple Bonus`,
+      "Premium Couple Suite",
+      "VIP Couple Benefits",
+      "Advanced Joint Trading",
+    ],
+    color: "from-red-700 to-red-600",
+    popular: false,
+    category: "couple",
   },
 ];
 
 const chartData = [
-  // Weekly tracking
-  {
-    period: "Week 1",
-    Starter: 3,
-    Growth: 3.5,
-    Professional: 2.5,
-    Expert: 8.3,
-    Enterprise: 6.25,
-  },
-  {
-    period: "Week 2",
-    Starter: 6,
-    Growth: 7,
-    Professional: 5,
-    Expert: 16.6,
-    Enterprise: 12.5,
-  },
-
-  // Monthly tracking
   {
     period: "Month 1",
-    Starter: 12,
-    Growth: 14,
-    Professional: 10,
-    Expert: 33.3,
-    Enterprise: 25,
+    [investmentPlans.single.starter.name]: investmentPlans.single.starter.dailyBonus * 30,
+    [investmentPlans.single.basic.name]: investmentPlans.single.basic.dailyBonus * 30,
+    [investmentPlans.single.premium.name]: investmentPlans.single.premium.dailyBonus * 30,
+    [investmentPlans.couple.starter.name]: investmentPlans.couple.starter.dailyBonus * 30,
+    [investmentPlans.couple.basic.name]: investmentPlans.couple.basic.dailyBonus * 30,
+    [investmentPlans.couple.premium.name]: investmentPlans.couple.premium.dailyBonus * 30,
   },
   {
-    period: "Month 3",
-    Starter: 36,
-    Growth: 42,
-    Professional: 30,
-    Expert: 100,
-    Enterprise: 75,
+    period: "Month 2",
+    [investmentPlans.single.starter.name]: investmentPlans.single.starter.dailyBonus * 60,
+    [investmentPlans.single.basic.name]: investmentPlans.single.basic.dailyBonus * 60,
+    [investmentPlans.single.premium.name]: investmentPlans.single.premium.dailyBonus * 60,
+    [investmentPlans.couple.starter.name]: investmentPlans.couple.starter.dailyBonus * 60,
+    [investmentPlans.couple.basic.name]: investmentPlans.couple.basic.dailyBonus * 60,
+    [investmentPlans.couple.premium.name]: investmentPlans.couple.premium.dailyBonus * 60,
+  },
+  {
+    period: "Month 4",
+    [investmentPlans.single.starter.name]: investmentPlans.single.starter.dailyBonus * 120,
+    [investmentPlans.single.basic.name]: investmentPlans.single.basic.dailyBonus * 120,
+    [investmentPlans.single.premium.name]: investmentPlans.single.premium.dailyBonus * 120,
+    [investmentPlans.couple.starter.name]: investmentPlans.couple.starter.dailyBonus * 120,
+    [investmentPlans.couple.basic.name]: investmentPlans.couple.basic.dailyBonus * 120,
+    [investmentPlans.couple.premium.name]: investmentPlans.couple.premium.dailyBonus * 120,
   },
   {
     period: "Month 6",
-    Starter: 72,
-    Growth: 84,
-    Professional: 60,
-    Expert: 200,
-    Enterprise: 150,
-  },
-
-  // Annual tracking
-  {
-    period: "Month 9",
-    Starter: 108,
-    Growth: 126,
-    Professional: 90,
-    Expert: 300,
-    Enterprise: 225,
-  },
-  {
-    period: "Month 12",
-    Starter: 144,
-    Growth: 168,
-    Professional: 120,
-    Expert: 400,
-    Enterprise: 300,
-  },
+    [investmentPlans.single.starter.name]: investmentPlans.single.starter.dailyBonus * 180,
+    [investmentPlans.single.basic.name]: investmentPlans.single.basic.dailyBonus * 180,
+    [investmentPlans.single.premium.name]: investmentPlans.single.premium.dailyBonus * 180,
+    [investmentPlans.couple.starter.name]: investmentPlans.couple.starter.dailyBonus * 180,
+    [investmentPlans.couple.basic.name]: investmentPlans.couple.basic.dailyBonus * 180,
+    [investmentPlans.couple.premium.name]: investmentPlans.couple.premium.dailyBonus * 180,
+  }
 ];
+
 
 export default function Plans() {
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -211,6 +196,43 @@ export default function Plans() {
   };
 
   return (
+    <>
+      <Head>
+        <title>Investment Plans | Trade Finance - Single & Couple Investment Options</title>
+        <meta name="description" content="Explore Trade Finance's diverse investment plans with ROIs up to 150%. Choose from Single and Couple plans starting from $100. Calculate potential returns with our investment calculator." />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Investment Plans | Trade Finance" />
+        <meta property="og:description" content="Discover our range of investment plans with daily bonuses, referral rewards, and premium trading features. Start investing from $100." />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/investment-plans.png" />
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Trade Finance Investment Plans" />
+        <meta name="twitter:description" content="Single & Couple investment plans with daily bonuses and premium trading features. Use our ROI calculator to plan your investment." />
+        
+        {/* Additional SEO */}
+        <meta name="keywords" content="investment plans, trading ROI, couple investment, single investment, investment calculator, daily bonus, trading platform, investment returns" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://tradefinance.com/plans" />
+        
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "Trade Finance Investment Plans",
+            "description": "Investment plans for singles and couples with daily bonuses and premium trading features",
+            "offers": {
+              "@type": "AggregateOffer",
+              "lowPrice": "500",
+              "highPrice": "unlimitted",
+              "priceCurrency": "USD"
+            }
+          })}
+        </script>
+      </Head>
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-red-800 via-black to-red-900 fr h-[40vh] md:h-[80vh] pt-32 md:pt-60">
@@ -235,19 +257,47 @@ export default function Plans() {
             Projected Returns Over Time
           </h2>
           <div className="h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="period" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="Starter" stroke="#DC2626" />
-                <Line type="monotone" dataKey="Growth" stroke="#991B1B" />
-                <Line type="monotone" dataKey="Professional" stroke="#7F1D1D" />
-                <Line type="monotone" dataKey="Expert" stroke="#450A0A" />
-                <Line type="monotone" dataKey="Enterprise" stroke="#000000" />
-              </LineChart>
-            </ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%">
+  <LineChart data={chartData}>
+    <CartesianGrid strokeDasharray="3 3" />
+    <XAxis dataKey="period" />
+    <YAxis />
+    <Tooltip />
+    {/* Single Plans */}
+    <Line 
+      type="monotone" 
+      dataKey={investmentPlans.single.starter.name} 
+      stroke="#DC2626" 
+    />
+    <Line 
+      type="monotone" 
+      dataKey={investmentPlans.single.basic.name} 
+      stroke="#991B1B" 
+    />
+    <Line 
+      type="monotone" 
+      dataKey={investmentPlans.single.premium.name} 
+      stroke="#7F1D1D" 
+    />
+    {/* Couple Plans */}
+    <Line 
+      type="monotone" 
+      dataKey={investmentPlans.couple.starter.name} 
+      stroke="#1D4ED8" 
+    />
+    <Line 
+      type="monotone" 
+      dataKey={investmentPlans.couple.basic.name} 
+      stroke="#1E40AF" 
+    />
+    <Line 
+      type="monotone" 
+      dataKey={investmentPlans.couple.premium.name} 
+      stroke="#1E3A8A" 
+    />
+  </LineChart>
+</ResponsiveContainer>
+
           </div>
         </div>
       </section>
@@ -255,7 +305,7 @@ export default function Plans() {
       {/* Plans Grid */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {plans.map((plan, index) => (
               <motion.div
                 key={index}
@@ -267,11 +317,7 @@ export default function Plans() {
                   plan.popular ? "ring-2 ring-red-600" : ""
                 }`}
               >
-                {plan.popular && (
-                  <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm">
-                    Popular
-                  </div>
-                )}
+               
                 <div className={`bg-gradient-to-r ${plan.color} p-6`}>
                   <div className="flex items-center justify-between gap-4">
                     <span className="flex-shrink-0">{plan.icon}</span>
@@ -281,6 +327,11 @@ export default function Plans() {
                   <h3 className="text-2xl font-bold text-white mb-2">
                     {plan.name}
                   </h3>
+                  {plan.popular && (
+                  <div className="absolute text-center center-6 right-0 left-0 bg-red-600 text-white px-3 py-1 rounded-full text-sm">
+                    Popular
+                  </div>
+                )}
                 </div>
                 <div className="p-6 space-y-6">
                   <div className="text-center">
@@ -378,5 +429,6 @@ export default function Plans() {
         </div>
       </section>
     </div>
+    </>
   );
 }

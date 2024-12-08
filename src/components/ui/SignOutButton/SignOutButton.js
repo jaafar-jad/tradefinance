@@ -10,7 +10,7 @@ export default function SignOutButton() {
   const handleSignOut = () => {
     localStorage.removeItem('authToken')
     sessionStorage.clear()
-    router.push('/login')
+    router.push('/auth/login')
   }
 
   return (
@@ -51,7 +51,7 @@ export default function SignOutButton() {
                   onClick={handleSignOut}
                   className="px-4 py-2 text-sm font-medium text-white rounded-lg bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900"
                 >
-                  Yes, Sign Out
+                  Yes
                 </button>
               </div>
             </motion.div>

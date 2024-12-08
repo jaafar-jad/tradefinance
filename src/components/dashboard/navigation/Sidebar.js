@@ -1,8 +1,9 @@
 "use client"
+
+import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
 import { 
   FaHome, 
   FaChartLine, 
@@ -16,65 +17,70 @@ import {
   FaChartBar
 } from 'react-icons/fa'
 
-const navigation = [
-  { 
-    name: 'Dashboard', 
-    href: '/dashboard', 
-    icon: FaHome,
-    subItems: []
-  },
-  { 
-    name: 'Investments', 
-    href: '/dashboard/routes/investments/active', 
-    icon: FaChartLine,
-    subItems: [
-      { name: 'Active Plans', href: '/dashboard/routes/investments/active' },
-      { name: 'History', href: '/dashboard/routes/investments//history' }
-    ]
-  },
-  { 
-    name: 'Wallet', 
-    href: '/dashboard/routes/deposits', 
-    icon: FaWallet,
-    subItems: [
-      { name: 'Deposits', href: '/dashboard/routes/deposits' },
-      { name: 'Withdrawals', href: '/dashboard/routes/withdrawals' }
-    ]
-  },
-  { 
-    name: 'Transactions', 
-    href: '/dashboard/routes/transactions', 
-    icon: FaHistory,
-    subItems: []
-  },
-  { 
-    name: 'Referrals', 
-    href: '/dashboard/routes/referrals/list', 
-    icon: FaUsers,
-    subItems: [
-      { name: 'My Referrals', href: '/dashboard/routes/referrals/list' },
-    ]
-  },
-  { 
-    name: 'Settings', 
-    href: '/dashboard/route/profile', 
-    icon: FaCog,
-    subItems: [
-      { name: 'Profile', href: '/dashboard/routes/profile/settings/profile' },
-      { name: 'Security', href: '/dashboard/routes/profile/settings/profile/security' }
-    ]
-  },
-]
-
 export default function Sidebar() {
   const pathname = usePathname()
   const [hoveredItem, setHoveredItem] = useState(null)
+  const [userId, setUserId] = useState(null)
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    setUserId(user?.id)
+  }, [])
+
+  const navigation = userId ? [
+    { 
+      name: 'Dashboard', 
+      href: `/dashboard/${userId}`, 
+      icon: FaHome,
+      subItems: []
+    },
+    { 
+      name: 'Investments', 
+      href: `/dashboard/${userId}/investments/active`, 
+      icon: FaChartLine,
+      subItems: [
+        { name: 'Active Plans', href: `/dashboard/${userId}/investments/active` },
+        { name: 'History', href: `/dashboard/${userId}/investments/history` }
+      ]
+    },
+    { 
+      name: 'Wallet', 
+      href: `/dashboard/${userId}/deposits`, 
+      icon: FaWallet,
+      subItems: [
+        { name: 'Deposits', href: `/dashboard/${userId}/deposits` },
+        { name: 'Withdrawals', href: `/dashboard/${userId}/withdrawals` }
+      ]
+    },
+    { 
+      name: 'Transactions', 
+      href: `/dashboard/${userId}/transactions`, 
+      icon: FaHistory,
+      subItems: []
+    },
+    { 
+      name: 'Referrals', 
+      href: `/dashboard/${userId}/referrals/list`, 
+      icon: FaUsers,
+      subItems: [
+        { name: 'My Referrals', href: `/dashboard/${userId}/referrals/list` },
+      ]
+    },
+    { 
+      name: 'Settings', 
+      href: `/dashboard/${userId}/profile/settings/profile`, 
+      icon: FaCog,
+      subItems: [
+        { name: 'Profile', href: `/dashboard/${userId}/profile/settings/profile` },
+      ]
+    },
+  ] : []
 
   return (
     <div className="fixed left-0 top-0 h-full w-20 bg-white shadow-xl z-40 hidden lg:block">
       <div className="flex flex-col h-full">
         <div className="h-16 flex items-center justify-center border-b">
-          <Link href="/dashboard">
+          <Link href={`/dashboard/${userId}`}>
             <motion.div
               whileHover={{ scale: 1.1 }}
               className="text-2xl font-bold text-red-600"
@@ -130,16 +136,8 @@ export default function Sidebar() {
           ))}
         </nav>
 
-        <div className="p-4 border-t">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            className="w-full p-2 rounded-lg bg-red-600 text-white flex items-center justify-center"
-          >
-            <FaUsers className="h-5 w-5" />
-          </motion.button>
-        </div>
+        
       </div>
     </div>
   )
 }
-

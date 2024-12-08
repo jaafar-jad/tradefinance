@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { FaShieldAlt, FaHandshake, FaUserLock, FaBalanceScale, FaChartLine, FaGlobe } from 'react-icons/fa'
-
+import Head from 'next/head'
 const sections = [
   {
     icon: <FaHandshake className="text-3xl md:text-4xl text-red-600" />,
@@ -114,6 +114,31 @@ export default function Terms() {
   }
 
   return (
+
+    <>
+    <Head>
+      <title>Terms of Service | Trade Finance - Platform Policies & Guidelines</title>
+      <meta name="description" content="Read Trade Finance's terms of service covering platform agreements, privacy & security, trading operations, and legal framework. Clear and transparent policies for all users." />
+      
+      {/* Open Graph */}
+      <meta property="og:title" content="Terms of Service | Trade Finance" />
+      <meta property="og:description" content="Comprehensive terms covering account management, privacy, trading operations, and compliance requirements for Trade Finance platform users." />
+      <meta property="og:type" content="website" />
+      
+      {/* Twitter */}
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:title" content="Trade Finance Terms of Service" />
+      <meta name="twitter:description" content="Clear and transparent platform policies covering security, trading, and legal compliance." />
+      
+      {/* Additional SEO */}
+      <meta name="keywords" content="terms of service, platform agreement, privacy policy, trading terms, legal framework, compliance, security policy" />
+      <meta name="robots" content="index, follow" />
+      <link rel="canonical" href="https://tradefinance.com/terms" />
+      
+      {/* Last Modified */}
+      <meta property="article:modified_time" content={new Date().toISOString()} />
+    </Head>
+
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-red-800 via-black to-red-900 h-[40vh] md:h-[80vh] pt-32 md:pt-40">
@@ -229,5 +254,6 @@ export default function Terms() {
         </div>
       </section>
     </div>
+    </>
   )
 }

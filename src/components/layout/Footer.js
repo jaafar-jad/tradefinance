@@ -4,6 +4,17 @@ import { motion } from 'framer-motion';
 import { MdLocationOn, MdEmail } from 'react-icons/md';
 import { BiTime } from 'react-icons/bi';
 
+
+const navigationLinks = [
+  { name: 'Home', path: '/' },
+  { name: 'About', path: '/about' },
+  { name: 'Plans', path: '/plans' },
+  { name: 'Login', path: '/auth/login' },
+  { name: 'Signup', path: '/auth/signup' },
+  { name: 'Contact', path: '/contact' }
+];
+
+
 export default function Footer() {
   const fadeInUp = {
     initial: { y: 50, opacity: 0 },
@@ -26,26 +37,27 @@ export default function Footer() {
             </p>
           </motion.div>
 
-          {/* Useful Links */}
-          <motion.div 
-            {...fadeInUp}
-            transition={{ delay: 0.2 }}
-            className="space-y-4"
-          >
-            <h3 className="text-xl font-semibold text-white mb-4">Useful Links</h3>
-            <ul className="space-y-2">
-              {['Home', 'About', 'Plans', 'Login', 'Signup', 'Contact'].map((item) => (
-                <li key={item}>
-                  <Link 
-                    href={`/${item.toLowerCase().replace(' ', '')}`}
-                    className="hover:text-red-400 transition-colors duration-300 block py-1"
-                  >
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+        {/* Useful Links */}
+<motion.div 
+  {...fadeInUp}
+  transition={{ delay: 0.2 }}
+  className="space-y-4"
+>
+  <h3 className="text-xl font-semibold text-white mb-4">Useful Links</h3>
+  <ul className="space-y-2">
+    {navigationLinks.map((link) => (
+      <li key={link.name}>
+        <Link 
+          href={link.path}
+          className="hover:text-red-400 transition-colors duration-300 block py-1"
+        >
+          {link.name}
+        </Link>
+      </li>
+    ))}
+  </ul>
+</motion.div>
+
 
           {/* Contact Info */}
           <motion.div 

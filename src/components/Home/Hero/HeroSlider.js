@@ -12,7 +12,7 @@ const slides = [
     subtitle: "Investment Portfolio",
     description: "More effectively with a variety of crypto pairs, derivative trading instruments, and order types such as limit order, market order, stop order, or iceberg order all managed by expert traders.",
     gradient: "bg-gradient-to-r from-red-900 via-black to-red-600",
-    image: "/images/global-assets.jpg" // Optional: Add your image path
+   
   },
   {
     id: 2,
@@ -20,7 +20,7 @@ const slides = [
     subtitle: "Mining Innovation",
     description: "Experience the future of mining with our AI-powered automated systems. Utilizing cutting-edge blockchain technology to maximize your mining efficiency and returns.",
     gradient: "bg-gradient-to-r from-black via-red-800 to-black",
-    image: "/images/crypto-mining.jpg" // Optional: Add your image path
+   
   },
   {
     id: 3,
@@ -28,7 +28,7 @@ const slides = [
     subtitle: "Secure Trading",
     description: "Diversify your crypto portfolio and build long-term wealth with advanced tools for crypto mining, wallet management, and crypto holdings.",
     gradient: "bg-gradient-to-r from-red-700 via-black to-red-700",
-    image: "/images/trade-finance.jpg" // Optional: Add your image path
+   
   }
 ]
 
@@ -87,10 +87,10 @@ export default function HeroSlider() {
           className="absolute w-full h-full"
         >
           <div className={`w-full h-full ${slides[currentSlide].gradient} relative`}>
-            {slides[currentSlide].image && (
+            {slides[currentSlide] && (
               <div 
                 className="absolute inset-0 bg-cover bg-center mix-blend-overlay"
-                style={{ backgroundImage: `url(${slides[currentSlide].image})` }}
+                style={{ backgroundImage: `url(${slides[currentSlide]})` }}
               />
             )}
             <div className="absolute inset-0 bg-black bg-opacity-50" />
@@ -133,7 +133,7 @@ export default function HeroSlider() {
                     Join Now
                   </Link>
                   <Link
-                    href="/login"
+                    href="/auth/login"
                     className="border border-white text-white px-4 md:px-8 py-2 md:py-3 text-sm md:text-base rounded-md hover:bg-white hover:text-black transition-colors duration-300"
                   >
                     Log In

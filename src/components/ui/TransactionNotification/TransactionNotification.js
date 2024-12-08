@@ -66,7 +66,7 @@ export default function TransactionNotification() {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 50 }}
-      className="fixed top-12 md:top-1  md:bottom-16 left-0 right-0 -translate-x-1/2 z-50 w-full px-4 md:px-0 md:w-auto"
+      className="fixed bottom-4 left-0 right-0 -translate-x-1/2 z-50 w-full px-4 md:px-0 md:w-auto"
     >
       <div className="bg-white rounded-lg shadow-2xl p-1 relative mx-auto max-w-[260px] md:max-w-[290px]">
         <button
