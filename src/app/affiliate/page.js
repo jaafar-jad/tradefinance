@@ -81,7 +81,7 @@ export default function Affiliate() {
 
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative h-[40vh]   md:h-[100vh] overflow-hidden">
+      <section className="relative h-[30vh]   md:h-[80vh] overflow-hidden">
         <Image
           src="/affiliatebanks.png"
           alt="Affiliate Banks"
@@ -110,10 +110,10 @@ export default function Affiliate() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto mb-16"
           >
-            <h2 className="text-2xl md:text-4xl font-bold mb-6 text-white font-serif">
+            <h2 className="text-2xl md:text-5xl font-bold mb-6 text-white font-serif">
               Partnership Benefits
             </h2>
-            <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+            <p className="text-sm md:text-xl text-gray-300 leading-relaxed">
               Our strategic banking partnerships provide exceptional advantages for our clients
             </p>
           </motion.div>

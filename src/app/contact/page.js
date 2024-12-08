@@ -281,17 +281,17 @@ export default function Contact() {
 
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-red-800 via-black to-red-900 h-[40vh] md:h-[80vh] pt-32 md:pt-40">
+      <section className="bg-gradient-to-r from-red-800 via-black to-red-900 h-[30vh] md:h-[80vh] pt-32 md:pt-40">
         <div className="container mx-auto px-4">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <h1 className="text-2xl md:text-6xl font-bold md:pt-32 text-white mb-6">
+            <h1 className="text-2xl md:text-5xl font-bold md:pt-32 text-white mb-6">
               Get in Touch
             </h1>
-            <p className="text-gray-400 text-lg md:text-xl mb-8 px-4 md:px-0">
+            <p className="text-gray-400 text-sm md:text-xl mb-8 px-4 md:px-0">
               We're here to help you succeed in your investment journey
             </p>
           </motion.div>
@@ -400,6 +400,7 @@ export default function Contact() {
           </motion.div>
         )}
       </AnimatePresence>
+
 
     </div>
     </>

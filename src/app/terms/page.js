@@ -141,17 +141,17 @@ export default function Terms() {
 
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-red-800 via-black to-red-900 h-[40vh] md:h-[80vh] pt-32 md:pt-40">
+      <section className="bg-gradient-to-r from-red-800 via-black to-red-900 h-[30vh] md:h-[80vh] pt-32 md:pt-40">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl md:pt-32 mx-auto"
           >
-            <h1 className="text-2xl md:text-6xl font-bold text-white mb-6">
+            <h1 className="text-2xl md:text-5xl font-bold text-white mb-6">
               Terms of Service
             </h1>
-            <p className="text-gray-400 text-lg md:text-xl mb-8">
+            <p className="text-gray-400 text-sm  md:text-xl mb-8">
               Clear, fair, and transparent. Our commitment to you.
             </p>
           </motion.div>
