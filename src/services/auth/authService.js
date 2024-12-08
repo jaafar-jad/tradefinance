@@ -1,4 +1,4 @@
-import {client} from '../../lib/contentful'
+import { client } from '../../lib/contentful'
 
 export const authenticateUser = async (email, password) => {
   try {
@@ -12,12 +12,14 @@ export const authenticateUser = async (email, password) => {
       throw new Error('Invalid credentials')
     }
 
-    // Extract only the needed fields instead of the entire response
+    // Generate a simple accessToken using timestamp and user ID
+    const accessToken = `${response.items[0].sys.id}_${Date.now()}`
+
     const userData = {
       id: response.items[0].sys.id,
       email: response.items[0].fields.email,
       name: response.items[0].fields.name,
-      // Add other needed fields here
+      accessToken
     }
 
     return userData

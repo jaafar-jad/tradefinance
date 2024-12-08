@@ -1,11 +1,4 @@
 {
-  "root": true,
-  "extends": ["next/babel", "next/core-web-vitals" , "next"],
-  "parserOptions": {
-    "ecmaVersion": 2021,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
-  }
+  "extends": ["next/babel", "next/core-web-vitals" , "next"]
+  
 }

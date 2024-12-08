@@ -4,7 +4,7 @@ import HomeServices from '@/components/Home/HomeServices/HomeServices'
 import HomePlans from '@/components/Home/HomePlans/HomePlans'
 import HomeTransactions from '@/components/Home/HomeTransactions/HomeTransactions'
 import HomeAffiliate from '@/components/Home/HomeAffiliate/HomeAffiliate'
-
+import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary'
 export const metadata = {
   openGraph: {
     title: 'Trade Finance | AI-Powered Trading Platform',
@@ -24,6 +24,7 @@ export const metadata = {
 
 export default function Home() {
   return (
+    <ErrorBoundary>
     <main>
       <HeroSlider />
       <HomeAbout/>
@@ -32,5 +33,6 @@ export default function Home() {
       <HomeTransactions/>
       <HomeAffiliate/>
     </main>
+    </ErrorBoundary>
   )
 }

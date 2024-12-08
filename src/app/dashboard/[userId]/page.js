@@ -5,6 +5,7 @@ import Charts from "@/components/dashboard/charts/Charts"
 import TradingViewChart from "@/components/dashboard/charts/TradingViewChart"
 import QuickActions from "@/components/ui/QuickActions/QuickActions"
 import HomeTransactions from "@/components/Home/HomeTransactions/HomeTransactions"
+import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary'
 
 export default function DashboardPage() {
   const params = useParams()
@@ -29,13 +30,14 @@ export default function DashboardPage() {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="mobile-web-app-capable" content="yes" />
       </Head>
-
+      <ErrorBoundary>
       <div className="min-h-screen-mt-4 bg-gray-100">
         <Charts/>
         <QuickActions userId={userId} />
         <TradingViewChart/>
         <HomeTransactions/>
       </div>
+      </ErrorBoundary>
     </>
   )
 }
