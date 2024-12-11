@@ -158,69 +158,76 @@ export default function Login() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6 mt-8">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <div className="relative">
-                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className={`w-full pl-10 pr-4 py-3 rounded-lg border ${
-                    errors.email ? 'border-red-500' : 'border-gray-300'
-                  } focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200`}
-                  placeholder="Enter your email"
-                  disabled={isLoading}
-                />
-              </div>
-              {errors.email && (
-                <motion.p 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="mt-1 text-sm text-red-500"
-                >
-                  {errors.email}
-                </motion.p>
-              )}
-            </div>
+          <div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Email Address
+  </label>
+  <div className="relative">
+    <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+    <input
+      type="email"
+      value={formData.email}
+      onChange={(e) => setFormData({...formData, email: e.target.value})}
+      className={`w-full pl-10 pr-4 py-3 rounded-lg border 
+        ${errors.email ? 'border-red-500' : 'border-gray-300'}
+        focus:ring-2 focus:ring-red-500 focus:border-transparent 
+        transition-all duration-200
+        text-gray-900 font-medium
+        placeholder:text-gray-400`}
+      placeholder="Enter your email"
+      disabled={isLoading}
+    />
+  </div>
+  {errors.email && (
+    <motion.p 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="mt-1 text-sm text-red-500"
+    >
+      {errors.email}
+    </motion.p>
+  )}
+</div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={formData.password}
-                  onChange={(e) => setFormData({...formData, password: e.target.value})}
-                  className={`w-full pl-10 pr-12 py-3 rounded-lg border ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
-                  } focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200`}
-                  placeholder="Enter your password"
-                  disabled={isLoading}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  disabled={isLoading}
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </div>
-              {errors.password && (
-                <motion.p 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="mt-1 text-sm text-red-500"
-                >
-                  {errors.password}
-                </motion.p>
-              )}
-            </div>
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Password
+  </label>
+  <div className="relative">
+    <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+    <input
+      type={showPassword ? 'text' : 'password'}
+      value={formData.password}
+      onChange={(e) => setFormData({...formData, password: e.target.value})}
+      className={`w-full pl-10 pr-12 py-3 rounded-lg border 
+        ${errors.password ? 'border-red-500' : 'border-gray-300'}
+        focus:ring-2 focus:ring-red-500 focus:border-transparent 
+        transition-all duration-200
+        text-gray-900 font-medium
+        placeholder:text-gray-400`}
+      placeholder="Enter your password"
+      disabled={isLoading}
+    />
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+      disabled={isLoading}
+    >
+      {showPassword ? <FaEyeSlash /> : <FaEye />}
+    </button>
+  </div>
+  {errors.password && (
+    <motion.p 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="mt-1 text-sm text-red-500"
+    >
+      {errors.password}
+    </motion.p>
+  )}
+</div>
+
 
             <div className="flex items-center justify-between">
               <label className="flex items-center">

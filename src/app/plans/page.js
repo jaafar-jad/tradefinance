@@ -461,14 +461,19 @@ export default function Plans() {
                       Investment Amount ($)
                     </label>
                     <input
-                      type="number"
-                      value={investment}
-                      onChange={(e) => setInvestment(e.target.value)}
-                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 md:px-4 md:py-3 
-                focus:ring-2 focus:ring-red-500 focus:border-transparent
-                text-sm md:text-base transition-all duration-300"
-                      placeholder="Enter amount"
-                    />
+  type="number"
+  value={investment}
+  onChange={(e) => setInvestment(e.target.value)}
+  className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 md:px-4 md:py-3 
+    focus:ring-2 focus:ring-red-500 focus:border-transparent
+    text-sm md:text-base transition-all duration-300
+    text-gray-900 font-medium
+    [appearance:textfield]
+    [&::-webkit-outer-spin-button]:appearance-none
+    [&::-webkit-inner-spin-button]:appearance-none"
+  placeholder="Enter amount"
+/>
+
                   </div>
 
                   <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 md:gap-6">
