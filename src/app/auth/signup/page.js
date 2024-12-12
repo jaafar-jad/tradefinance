@@ -94,7 +94,7 @@ export default function Signup() {
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       <meta name="format-detection" content="telephone=no" />
       
-      <link rel="canonical" href="https://tradefinance.com/auth/signup" />
+      <link rel="canonical" href="https://tradefinancetf.com/auth/signup" />
     </Head>
 
     <div className="min-h-screen flex items-center justify-center bg-cover bg-center bg-gradient-to-br from-red-900 via-black to-red-900">

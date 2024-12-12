@@ -125,7 +125,7 @@ export default function Login() {
         {/* PWA */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <link rel="canonical" href="https://tradefinance.com/auth/login" />
+        <link rel="canonical" href="https://tradefinancetf.com/auth/login" />
       </Head>
 
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-black to-red-900">

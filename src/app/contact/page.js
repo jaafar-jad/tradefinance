@@ -7,7 +7,7 @@ const socialLinks = [
   {
     name: 'Email',
     icon: <FaEnvelope className="text-2xl md:text-3xl" />,
-    link: 'mailto:support@tradefinance.com',
+    link: 'mailto:support@tradefinancetf.com',
     color: 'hover:text-red-600'
   },
   {
@@ -271,7 +271,7 @@ export default function Contact() {
         {/* Additional SEO */}
         <meta name="keywords" content="trade finance support, investment FAQ, trading support, contact us, customer service, financial assistance, trading help" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://tradefinance.com/contact" />
+        <link rel="canonical" href="https://tradefinancetf.com/contact" />
         
         {/* Social Media Links Verification */}
         <meta name="twitter:site" content="@tradefinance" />

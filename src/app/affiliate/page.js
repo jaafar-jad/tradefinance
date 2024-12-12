@@ -75,7 +75,7 @@ export default function Affiliate() {
       
       {/* Additional SEO */}
       <meta name="keywords" content="banking partners, affiliate banks, Deutsche Bank, HSBC, Barclays, global banking, financial partnerships, trade finance partners" />
-      <link rel="canonical" href="https://tradefinance.com/affiliate" />
+      <link rel="canonical" href="https://tradefinancetf.com/affiliate" />
     </Head>
 
 

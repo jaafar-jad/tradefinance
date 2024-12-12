@@ -17,9 +17,10 @@ export const metadata = {
     title: 'Trade Finance Platform',
     description: 'AI-powered trading platform with secure investment plans.',
     images: ['/home-hero.png'],
+
   },
   robots: { index: true, follow: true },
-  alternates: { canonical: 'https://tradefinance.com' },
+  alternates: { canonical: 'https://tradefinancetf.com' },
 }
 
 export default function Home() {

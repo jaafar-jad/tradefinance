@@ -330,7 +330,7 @@ export default function About() {
         <meta name="author" content="Trade Finance" />
         <meta name="robots" content="index, follow" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="canonical" href="https://tradefinance.com/about" />
+        <link rel="canonical" href="https://tradefinancetf.com/about" />
 
         {/* Language and locale */}
         <meta property="og:locale" content="en_US" />

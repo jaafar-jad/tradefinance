@@ -18,7 +18,7 @@ export default function DashboardPage() {
         
         {/* Security Headers */}
         <meta name="robots" content="noindex, nofollow" />
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.tradefinance.com" />
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.tradefinancetf.com" />
         <meta http-equiv="X-Frame-Options" content="DENY" />
         
         {/* Cache Control */}

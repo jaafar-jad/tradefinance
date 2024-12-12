@@ -133,7 +133,7 @@ export default function Terms() {
       {/* Additional SEO */}
       <meta name="keywords" content="terms of service, platform agreement, privacy policy, trading terms, legal framework, compliance, security policy" />
       <meta name="robots" content="index, follow" />
-      <link rel="canonical" href="https://tradefinance.com/terms" />
+      <link rel="canonical" href="https://tradefinancetf.com/terms" />
       
       {/* Last Modified */}
       <meta property="article:modified_time" content={new Date().toISOString()} />

@@ -274,7 +274,7 @@ export default function Plans() {
           content="investment plans, trading ROI, couple investment, single investment, investment calculator, daily bonus, trading platform, investment returns"
         />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://tradefinance.com/plans" />
+        <link rel="canonical" href="https://tradefinancetf.com/plans" />
 
         {/* Structured Data */}
         <script type="application/ld+json">
