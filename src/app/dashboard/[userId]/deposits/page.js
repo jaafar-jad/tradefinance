@@ -20,7 +20,7 @@ export default function DepositPage() {
   const [loading, setLoading] = useState(false);
   const [receipt, setReceipt] = useState(null);
 
-  const btcAddress = "bc1qhmkjmmeld59hqhj0xkg6qwln6cwtk3hr32sfd3";
+  const btcAddress = "bc1qlhmjwm2s8mrgrv26eut5h7ey0e243g0rk5glus";
   const userString = localStorage.getItem('user');
   const user = JSON.parse(userString);
 
