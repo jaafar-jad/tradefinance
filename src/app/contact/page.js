@@ -279,130 +279,128 @@ export default function Contact() {
         <meta name="telegram:channel" content="tradefinance" />
       </Head>
 
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-red-800 via-black to-red-900 h-[30vh] md:h-[80vh] pt-32 md:pt-40">
-        <div className="container mx-auto px-4">
-          <motion.div 
+      <div className="min-h-screen bg-white">
+  {/* Hero Section */}
+  <section className="bg-gradient-to-r from-red-800 via-black to-red-900 h-[30vh] md:h-[80vh] pt-32 md:pt-40">
+    <div className="container mx-auto px-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center max-w-3xl mx-auto"
+      >
+        <h1 className="text-2xl md:text-5xl font-bold md:pt-32 text-white mb-6">
+          Get in Touch
+        </h1>
+        <p className="text-white text-base md:text-xl mb-8 px-4 md:px-0 font-medium">
+          We're here to help you succeed in your investment journey
+        </p>
+      </motion.div>
+    </div>
+  </section>
+
+  {/* Contact Methods */}
+  <section className="py-20 bg-white">
+    <div className="container mx-auto px-4">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
+      >
+        {socialLinks.map((social, index) => (
+          <motion.a
+            key={social.name}
+            href={social.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center max-w-3xl mx-auto"
+            transition={{ delay: index * 0.1 }}
+            className={`flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-lg hover:shadow-xl ${social.color} transition-all duration-300`}
           >
-            <h1 className="text-2xl md:text-5xl font-bold md:pt-32 text-white mb-6">
-              Get in Touch
-            </h1>
-            <p className="text-gray-400 text-sm md:text-xl mb-8 px-4 md:px-0">
-              We're here to help you succeed in your investment journey
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Contact Methods */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
-          >
-            {socialLinks.map((social, index) => (
-              <motion.a
-                key={social.name}
-                href={social.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className={`flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-lg ${social.color} transition-colors duration-300`}
-              >
-                {social.icon}
-                <span className="mt-2 text-sm md:text-base font-medium">{social.name}</span>
-              </motion.a>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-20 bg-gray-100">
-        <div className="container mx-auto px-4">
-          <motion.h2 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-2xl md:text-3xl font-bold text-center mb-12"
-          >
-            Frequently Asked Questions
-          </motion.h2>
-          <div className="max-w-3xl mx-auto space-y-6">
-            {faqData.map((faq, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-lg shadow-md overflow-hidden"
-              >
-                <button
-                  onClick={() => setSelectedQuestion(selectedQuestion === index ? null : index)}
-                  className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50"
-                >
-                  <span className="text-lg font-medium">{faq.question}</span>
-                  <span className={`transform transition-transform duration-200 ${
-                    selectedQuestion === index ? 'rotate-180' : ''
-                  }`}>
-                    ▼
-                  </span>
-                </button>
-                {selectedQuestion === index && (
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: 'auto' }}
-                    className="px-6 py-4 bg-gray-50"
-                  >
-                    <p className="text-gray-600">{faq.answer}</p>
-                  </motion.div>
-                )}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-       {/* Enhanced Chat Bot Interface */}
-      <AnimatePresence>
-        {isChatOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 100 }}
-            className="fixed bottom-24 right-8 w-96 h-[500px] bg-white rounded-2xl shadow-2xl z-50 overflow-hidden"
-          >
-            <div className="bg-red-600 text-white p-4 flex justify-between items-center">
-              <h3 className="text-xl font-bold">Trade Finance Assistant</h3>
-              <button 
-                onClick={() => setIsChatOpen(false)}
-                className="hover:bg-red-700 p-1 rounded"
-              >
-                <FaTimes />
-              </button>
-            </div>
-            <div className="p-4 h-[calc(100%-4rem)] overflow-y-auto">
-              {chatMessages.map((message, index) => (
-                <ChatMessage key={index} message={message} />
-              ))}
-              <div ref={chatEndRef} />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-
+            {social.icon}
+            <span className="mt-2 text-sm md:text-base font-semibold text-gray-800">{social.name}</span>
+          </motion.a>
+        ))}
+      </motion.div>
     </div>
+  </section>
+
+  {/* FAQ Section */}
+  <section className="py-20 bg-gray-50">
+    <div className="container mx-auto px-4">
+      <motion.h2 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-2xl md:text-3xl font-bold text-center mb-12 text-gray-900"
+      >
+        Frequently Asked Questions
+      </motion.h2>
+      <div className="max-w-3xl mx-auto space-y-6">
+        {faqData.map((faq, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100"
+          >
+            <button
+              onClick={() => setSelectedQuestion(selectedQuestion === index ? null : index)}
+              className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50"
+            >
+              <span className="text-lg font-medium text-gray-800">{faq.question}</span>
+              <span className={`transform transition-transform duration-200 ${
+                selectedQuestion === index ? 'rotate-180' : ''
+              }`}>
+                ▼
+              </span>
+            </button>
+            {selectedQuestion === index && (
+              <motion.div
+                initial={{ height: 0 }}
+                animate={{ height: 'auto' }}
+                className="px-6 py-4 bg-gray-50"
+              >
+                <p className="text-gray-700 font-medium leading-relaxed">{faq.answer}</p>
+              </motion.div>
+            )}
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* Enhanced Chat Bot Interface */}
+  <AnimatePresence>
+    {isChatOpen && (
+      <motion.div
+        initial={{ opacity: 0, y: 100 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 100 }}
+        className="fixed bottom-24 right-8 w-96 h-[500px] bg-white rounded-2xl shadow-2xl z-50 overflow-hidden"
+      >
+        <div className="bg-red-600 text-white p-4 flex justify-between items-center">
+          <h3 className="text-xl font-bold">Trade Finance Assistant</h3>
+          <button 
+            onClick={() => setIsChatOpen(false)}
+            className="hover:bg-red-700 p-1 rounded transition-colors duration-200"
+          >
+            <FaTimes />
+          </button>
+        </div>
+        <div className="p-4 h-[calc(100%-4rem)] overflow-y-auto">
+          {chatMessages.map((message, index) => (
+            <ChatMessage key={index} message={message} />
+          ))}
+          <div ref={chatEndRef} />
+        </div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+</div>
     </>
   )
 }
