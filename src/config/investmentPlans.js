@@ -2,7 +2,7 @@ export  const investmentPlans = {
   single: {
     starter: {
       name: "Starter Plan",
-      minAmount: 500,
+      minAmount: 100,
       maxAmount: 4999,
       roi: 150, // 150% total ROI
       duration: 6, // 6 months
@@ -31,7 +31,7 @@ export  const investmentPlans = {
   couple: {
     starter: {
       name: "Couple Starter Plan",
-      minAmount: 500,
+      minAmount: 100,
       maxAmount: 4999,
       roi: 150,
       duration: 6,
