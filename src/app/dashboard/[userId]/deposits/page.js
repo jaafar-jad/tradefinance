@@ -67,7 +67,7 @@ export default function DepositPage() {
               <label className="text-xs font-medium text-gray-700">Select Investment Plan</label>
               <select
                 required
-                className="w-full px-3 py-2 text-sm border rounded-lg focus:ring-1 focus:ring-red-500"
+                className="w-full px-3 py-2 text-sm border  text-gray-600 rounded-lg focus:ring-1 focus:ring-red-500"
                 onChange={handlePlanChange}
                 value={`${formData.accountType}-${formData.planType}`}
               >
@@ -85,21 +85,21 @@ export default function DepositPage() {
               <h4 className="font-medium text-red-800 mb-2">Selected Plan Details</h4>
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div>
-                  <span className="text-gray-600">ROI:</span>
-                  <span className="font-medium ml-2">{investmentPlans[formData.accountType][formData.planType].roi}%</span>
+                  <span className="text-gray-700">ROI:</span>
+                  <span className="font-medium  text-gray-600 ml-2">{investmentPlans[formData.accountType][formData.planType].roi}%</span>
                 </div>
                 <div>
-                  <span className="text-gray-600">Duration:</span>
-                  <span className="font-medium ml-2">{investmentPlans[formData.accountType][formData.planType].duration} months</span>
+                  <span className="text-gray-700">Duration:</span>
+                  <span className="font-medium  text-gray-600 ml-2">{investmentPlans[formData.accountType][formData.planType].duration} months</span>
                 </div>
                 <div>
-                  <span className="text-gray-600">Daily Bonus:</span>
-                  <span className="font-medium ml-2">{investmentPlans[formData.accountType][formData.planType].dailyBonus}%</span>
+                  <span className="text-gray-700">Daily Bonus:</span>
+                  <span className="font-medium  text-gray-600 ml-2">{investmentPlans[formData.accountType][formData.planType].dailyBonus}%</span>
                 </div>
                 {formData.accountType === 'couple' && (
                   <div>
-                    <span className="text-gray-600">Couple Bonus:</span>
-                    <span className="font-medium ml-2">${investmentPlans[formData.accountType][formData.planType].coupleBonus}</span>
+                    <span className="text-gray-700">Couple Bonus:</span>
+                    <span className="font-medium text-gray-600  ml-2">${investmentPlans[formData.accountType][formData.planType].coupleBonus}</span>
                   </div>
                 )}
               </div>
@@ -123,7 +123,7 @@ export default function DepositPage() {
                 required
                 min={investmentPlans[formData.accountType][formData.planType].minAmount}
                 max={investmentPlans[formData.accountType][formData.planType].maxAmount === Infinity ? "" : investmentPlans[formData.accountType][formData.planType].maxAmount}
-                className="w-full px-3 py-2 text-sm border rounded-lg focus:ring-1 focus:ring-red-500"
+                className="w-full px-3 py-2 text-sm border  text-gray-600 rounded-lg focus:ring-1 focus:ring-red-500"
                 value={formData.amount}
                 onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
               />
@@ -134,7 +134,7 @@ export default function DepositPage() {
               <input
                 type="date"
                 required
-                className="w-full px-3 py-2 text-sm border rounded-lg focus:ring-1 focus:ring-red-500"
+                className="w-full px-3 py-2 text-sm border rounded-lg  text-gray-600 focus:ring-1 focus:ring-red-500"
                 value={formData.date}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
               />
@@ -172,39 +172,39 @@ export default function DepositPage() {
               <div className="space-y-3 text-xs">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Plan:</span>
-                  <span className="font-medium">{investmentPlans[formData.accountType][formData.planType].name}</span>
+                  <span className="font-medium  text-gray-500">{investmentPlans[formData.accountType][formData.planType].name}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Amount:</span>
-                  <span className="font-medium">${formData.amount}</span>
+                  <span className="font-medium text-gray-500">${formData.amount}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">ROI:</span>
-                  <span className="font-medium">{investmentPlans[formData.accountType][formData.planType].roi}%</span>
+                  <span className="font-medium text-gray-500">{investmentPlans[formData.accountType][formData.planType].roi}%</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Duration:</span>
-                  <span className="font-medium">{investmentPlans[formData.accountType][formData.planType].duration} months</span>
+                  <span className="font-medium text-gray-500">{investmentPlans[formData.accountType][formData.planType].duration} months</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Email:</span>
-                  <span className="font-medium">{formData.email}</span>
+                  <span className="font-medium text-gray-500">{formData.email}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Date:</span>
-                  <span className="font-medium">{formData.date}</span>
+                  <span className="font-medium text-gray-500">{formData.date}</span>
                 </div>
               </div>
             </div>
 
             <div className="bg-white p-4 rounded-lg border">
-              <h4 className="text-xs font-medium mb-2">Bitcoin Deposit Address</h4>
+              <h4 className="text-xs font-medium mb-2 text-gray-500">Bitcoin Deposit Address</h4>
               <div className="flex items-center space-x-2">
                 <input
                   type="text"
                   readOnly
                   value={btcAddress}
-                  className="flex-1 text-xs bg-gray-50 p-2 rounded"
+                  className="flex-1 text-xs bg-gray-50 text-gray-500 p-2 rounded"
                 />
                 <button
                   onClick={handleCopyAddress}
@@ -232,7 +232,7 @@ export default function DepositPage() {
                 <label
                   htmlFor="receipt-upload"
                   className="
-                    flex items-center justify-center space-x-2
+                    flex items-center text-gray-500 justify-center space-x-2
                     w-full py-2.5 text-sm font-medium text-white rounded-lg
                     bg-gradient-to-r from-red-600 to-red-800
                     hover:from-red-700 hover:to-red-900
