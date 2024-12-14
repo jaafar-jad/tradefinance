@@ -42,14 +42,13 @@ export default function Signup() {
 
   useEffect(() => {
     emailjs.init("pDlfW-Ph_I1xGxIrm");
-}, []);
+  }, []);
 
   // Initialize EmailJS at component mount
   useEffect(() => {
     init("pDlfW-Ph_I1xGxIrm");
   }, []);
 
-  
   // Update your handleSubmit function with better error handlin
 
   const handleSubmit = async (e) => {
@@ -225,7 +224,6 @@ export default function Signup() {
       newErrors.confirmPassword = "Passwords do not match";
     }
 
-
     // Add country and city validations
     if (!formData.country.trim()) {
       newErrors.country = "Country is required";
@@ -334,7 +332,6 @@ export default function Signup() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
-
                 {/* Full Name Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">

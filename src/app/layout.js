@@ -34,7 +34,7 @@ export const metadata = {
     type: 'website',
   },
   twitter: {
-    card: '/tdlogo.png',
+    card: 'summary_large_image',
     title: 'Trade Finance | AI-Powered Trading Platform',
     description: 'Trade Finance offers advanced AI-driven trading solutions with secure investment plans.',
     images: ['/tdlogo.png'],
