@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+
+import Image  from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   FaHome, 
@@ -81,12 +83,15 @@ export default function Sidebar() {
       <div className="flex flex-col h-full">
         <div className="h-16 flex items-center justify-center border-b">
           <Link href={`/dashboard/${userId}`}>
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              className="text-2xl font-bold text-red-600"
-            >
-              TF
-            </motion.div>
+            <div className="relative w-8 h-8 lg:w-12 lg:h-10 rounded-full overflow-hidden transition-all duration-300">
+              <Image
+               src='/tdlogo.png'
+               alt="TF"
+               layout="fill"
+               className="rounded-full object-cover"
+               priority
+             />
+            </div>
           </Link>
         </div>
 

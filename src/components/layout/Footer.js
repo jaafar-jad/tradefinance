@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { MdLocationOn, MdEmail } from 'react-icons/md';
 import { BiTime } from 'react-icons/bi';
+import { FaTelegram } from 'react-icons/fa';
 
 
 const navigationLinks = [
@@ -81,12 +82,12 @@ export default function Footer() {
                 </p>
               </div>
               <div className="flex items-start space-x-3">
-                <MdEmail className="text-red-400 text-xl mt-1" />
+                <FaTelegram className="text-red-400 text-xl mt-1" />
                 <a 
-                  href="mailto:admin@trade-finances.org"
+                  href="https://t.me/LauraKathy"
                   className="text-gray-400 hover:text-red-400 transition-colors duration-300"
                 >
-                  admin@trade-finances.org
+                  admin@tradefinancetf.com
                 </a>
               </div>
             </div>

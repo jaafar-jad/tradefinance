@@ -25,7 +25,16 @@ export default function Headerr({ onMenuClick, onRightMenuClick }) {
   const [showPortfolios, setShowPortfolios] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
 
-  const DEFAULT_AVATAR = "/default-avatar.png";
+  const getAvatarImage = (userProfile) => {
+    if (userProfile?.profileImage?.fields?.file?.url) {
+      return `https:${userProfile.profileImage.fields.file.url}`;
+    }
+
+    // Default to gender-based avatars
+    return userProfile?.gender?.toLowerCase() === 'female' 
+      ? "/avatarfemale.webp" 
+      : "/avatarmale.jpeg";
+  };
   const [realTimeBalances, setRealTimeBalances] = useState({
     mainBalance: 0,
     dailyEarning: 0,
@@ -286,15 +295,13 @@ export default function Headerr({ onMenuClick, onRightMenuClick }) {
                   className="flex items-center space-x-3 focus:outline-none"
                 >
                   <div className="relative w-8 h-8 lg:w-10 lg:h-10 rounded-full overflow-hidden ring-2 ring-red-400 hover:ring-red-300 transition-all duration-300">
-                    <Image
-                      src={userProfile?.profileImage?.fields?.file?.url
-                        ? `https:${userProfile.profileImage.fields.file.url}`
-                        : "/avatar.jpeg"}
-                      alt="Profile"
-                      layout="fill"
-                      className="rounded-full object-cover"
-                      priority
-                    />
+                  <Image
+    src={getAvatarImage(userProfile)}
+    alt="Profile"
+    layout="fill"
+    className="rounded-full object-cover"
+    priority
+  />
                   </div>
                 </button>
   
@@ -311,15 +318,13 @@ export default function Headerr({ onMenuClick, onRightMenuClick }) {
                       <div className="p-4 border-b border-gray-100">
                         <div className="flex items-center space-x-3">
                           <div className="relative w-16 h-16 rounded-full overflow-hidden ring-2 ring-red-400">
-                            <Image
-                              src={userProfile?.profileImage?.fields?.file?.url
-                                ? `https:${userProfile.profileImage.fields.file.url}`
-                                : "/avatar.jpeg"}
-                              alt="Profile"
-                              layout="fill"
-                              className="rounded-full object-cover"
-                              priority
-                            />
+                          <Image
+    src={getAvatarImage(userProfile)}
+    alt="Profile"
+    layout="fill"
+    className="rounded-full object-cover"
+    priority
+  />
                           </div>
                           <div>
                             <h3 className="font-semibold text-gray-900">

@@ -1,6 +1,6 @@
 import { MdEmail, MdLocationOn } from 'react-icons/md';
 import { BiTime } from 'react-icons/bi';
-import { FaFacebookF, FaTwitter, FaGooglePlusG, FaLinkedinIn } from 'react-icons/fa';
+import { FaFacebookF, FaTwitter, FaGooglePlusG, FaLinkedinIn, FaTelegram } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
 export default function TopBar() {
@@ -19,12 +19,12 @@ export default function TopBar() {
           </div>
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <MdEmail className="text-red-600 text-xl" />
+              <FaTelegram className="text-red-600 text-xl" />
              <a 
-                  href="mailto:admin@trade-finances.org"
+                  href="https://t.me/LauraKathy"
                   className="text-gray-400 hover:text-red-400 transition-colors duration-300"
                 >
-                  admin@trade-finances.org
+                  admin@tradefinancetf.com
                 </a> </div>
             <div className="flex items-center space-x-4">
               <FaFacebookF className="text-red-600 hover:text-red-800 cursor-pointer" />

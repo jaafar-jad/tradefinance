@@ -22,10 +22,37 @@ import {
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState("personal");
-  const [profileImage, setProfileImage] = useState("/default-avatar.png");
+  const [profileImage, setProfileImage] = useState("/avatar.png");
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const params = useParams();
+
+  // Update the getAvatarImage helper function
+const getAvatarImage = (userData) => {
+  if (userData?.profileImage?.startsWith('http') || userData?.profileImage?.startsWith('/')) {
+    return userData.profileImage;
+  }
+  
+  return userData?.gender?.toLowerCase() === 'female' 
+    ? "/avatarfemale.webp" 
+    : "/avatarmale.jpeg";
+};
+
+
+const getFullImageUrl = (userData) => {
+  if (!userData?.profileImage) {
+    return userData?.gender?.toLowerCase() === 'female' 
+      ? "/avatarfemale.webp" 
+      : "/avatarmale.jpeg";
+  }
+  
+  if (userData.profileImage.startsWith('//')) {
+    return `https:${userData.profileImage}`;
+  }
+  
+  return userData.profileImage;
+};
+
 
   const fetchUserProfile = async () => {
     try {
@@ -47,20 +74,22 @@ export default function ProfilePage() {
           phoneNumber: userProfile.fields.phoneNumber || "",
           country: userProfile.fields.country || "",
           city: userProfile.fields.city || "",
-          address: userProfile.fields.address || "",
-          dateOfBirth: userProfile.fields.dateOfBirth || "",
-          occupation: userProfile.fields.occupation || "",
           accountType: userProfile.fields.accountType || "",
           accountStatus: userProfile.fields.accountStatus || "",
           kycStatus: userProfile.fields.kycStatus || "",
+          gender: userProfile.fields.gender || "male", // Add gender field
           profileImage:
             userProfile.fields.profileImage?.fields?.file?.url ||
-            "/default-avatar.png",
+            (userProfile.fields.gender?.toLowerCase() === 'female' 
+              ? "/avatarfemale.webp" 
+              : "/avatarmale.jpeg"),
           walletAddresses: userProfile.fields.walletAddresses || {},
         });
         setProfileImage(
           userProfile.fields.profileImage?.fields?.file?.url ||
-            "/default-avatar.png"
+          (userProfile.fields.gender?.toLowerCase() === 'female' 
+            ? "/avatarfemale.webp" 
+            : "/avatarmale.jpeg")
         );
       }
     } catch (error) {
@@ -89,8 +118,6 @@ export default function ProfilePage() {
             phoneNumber: { "en-US": userData.phoneNumber },
             country: { "en-US": userData.country },
             city: { "en-US": userData.city },
-            address: { "en-US": userData.address },
-            occupation: { "en-US": userData.occupation },
           },
         });
       }
@@ -230,13 +257,13 @@ export default function ProfilePage() {
                 <div className="relative group">
                   <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-800 rounded-full opacity-75 group-hover:opacity-100 transition duration-300"></div>
                   <div className="relative">
-                    <Image
-                      src={profileImage.startsWith('http') ? profileImage : `https:${profileImage}`}
-                      alt="Profile"
-                      width={300}
-                      height={300}
-                      className="rounded-full w-32 h-32 md:w-40 md:h-40 object-cover border-4 border-white"
-                    />
+                  <Image
+  src={getFullImageUrl(userData)}
+  alt="Profile"
+  width={300}
+  height={300}
+  className="rounded-full w-32 h-32 md:w-40 md:h-40 object-cover border-4 border-white"
+/>
                     <label className="absolute bottom-2 right-2 p-2 bg-red-600 rounded-full cursor-pointer hover:bg-red-700 transition-colors duration-300">
                       <FaCamera className="h-4 w-4 md:h-5 md:w-5 text-white" />
                       <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />

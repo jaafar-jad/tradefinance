@@ -25,7 +25,7 @@ const socialLinks = [
   {
     name: 'Telegram',
     icon: <FaTelegram className="text-2xl md:text-3xl" />,
-    link: 'https://t.me/tradefinance',
+    link: 'https://t.me/LauraKathy',
     color: 'hover:text-red-600'
   }
 ]
