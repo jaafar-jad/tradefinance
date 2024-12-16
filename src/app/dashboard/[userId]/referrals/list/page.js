@@ -139,19 +139,19 @@ export default function ReferralPage() {
       {/* Cache Control */}
       <meta http-equiv="Cache-Control" content="private, no-store" />
     </Head>
-
-    <div className=" mx-auto ">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-red-900 via-red-800 to-black p-2 md:p-4 rounded-lg shadow-lg  mb-4">
+    
+    <div className="mx-auto">
+      {/* Header - Enhanced contrast */}
+      <div className="bg-gradient-to-r from-red-950 via-red-900 to-black p-2 md:p-4 rounded-lg shadow-lg mb-4">
         <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white tracking-wide mb-2">
           Referral Program
         </h1>
-        <p className="text-sm md:text-base text-red-100/80">
+        <p className="text-sm md:text-base text-red-50 font-medium">
           Earn rewards by inviting your friends
         </p>
       </div>
-
-      {/* Stats Grid */}
+    
+      {/* Stats Grid - Improved visibility */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         {referralStats.map((stat, index) => (
           <motion.div
@@ -159,51 +159,48 @@ export default function ReferralPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-white rounded-lg shadow-sm p-4"
+            className="bg-white rounded-lg shadow-md p-4"
           >
-            <p className="text-xs text-gray-600">{stat.label}</p>
+            <p className="text-xs text-gray-700 font-medium">{stat.label}</p>
             <p className="text-lg md:text-xl font-bold text-gray-900">{stat.value}</p>
           </motion.div>
         ))}
       </div>
-
-      {/* Referral Link Section */}
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-4">
-        <h2 className="text-lg font-semibold mb-4">Your Referral Link</h2>
+    
+      {/* Referral Link Section - Enhanced contrast */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-4">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Your Referral Link</h2>
         
         <div className="space-y-4">
-          {/* Referral Link */}
           <div className="relative">
             <input
               type="text"
               readOnly
               value={referralLink}
-              className="w-full px-4 py-3 text-sm bg-gray-50 rounded-lg"
+              className="w-full px-4 py-3 text-sm bg-gray-100 text-gray-900 font-medium rounded-lg border border-gray-200"
             />
             <button
               onClick={() => handleCopy(referralLink)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-red-600 hover:bg-red-50 rounded-md"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-red-700 hover:bg-red-50 rounded-md"
             >
               <FaCopy className="h-4 w-4" />
             </button>
           </div>
-
-          
-
+    
           {copied && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-sm text-green-600"
+              className="text-sm font-medium text-green-700"
             >
               Copied to clipboard!
             </motion.div>
           )}
         </div>
-
-        {/* Share Buttons */}
+    
+        {/* Share Buttons - Enhanced visibility */}
         <div className="mt-6">
-          <h3 className="text-sm font-medium mb-3">Share via</h3>
+          <h3 className="text-sm font-bold text-gray-900 mb-3">Share via</h3>
           <div className="flex flex-wrap gap-2">
             {shareLinks.map((platform) => (
               <a
@@ -213,8 +210,8 @@ export default function ReferralPage() {
                 rel="noopener noreferrer"
                 className={`
                   inline-flex items-center space-x-2 px-4 py-2
-                  text-sm font-medium text-white rounded-lg
-                  ${platform.color} hover:opacity-90 transition-opacity
+                  text-sm font-bold text-white rounded-lg
+                  ${platform.color} hover:opacity-90 transition-opacity shadow-sm
                 `}
               >
                 <platform.icon className="h-4 w-4" />
@@ -224,31 +221,31 @@ export default function ReferralPage() {
           </div>
         </div>
       </div>
-
-      {/* Referral History */}
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-lg font-semibold mb-4">Referral History</h2>
+    
+      {/* Referral History - Improved contrast */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Referral History</h2>
         <div className="space-y-4">
           {referralHistory.map((referral) => (
             <motion.div
               key={referral.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+              className="flex items-center justify-between p-4 bg-gray-100 rounded-lg border border-gray-200"
             >
               <div className="flex items-center space-x-3">
-                <div className="bg-red-100 p-2 rounded-full">
-                  <FaUsers className="h-4 w-4 text-red-600" />
+                <div className="bg-red-200 p-2 rounded-full">
+                  <FaUsers className="h-4 w-4 text-red-700" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium">{referral.username}</p>
-                  <p className="text-xs text-gray-600">{referral.date}</p>
+                  <p className="text-sm font-bold text-gray-900">{referral.username}</p>
+                  <p className="text-xs text-gray-700">{referral.date}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-sm font-medium">${referral.earnings}</p>
-                <p className={`text-xs ${
-                  referral.status === 'Active' ? 'text-green-600' : 'text-gray-600'
+                <p className="text-sm font-bold text-gray-900">${referral.earnings}</p>
+                <p className={`text-xs font-medium ${
+                  referral.status === 'Active' ? 'text-green-700' : 'text-gray-700'
                 }`}>
                   {referral.status}
                 </p>
@@ -257,11 +254,11 @@ export default function ReferralPage() {
           ))}
         </div>
       </div>
-
-      {/* Referral Terms */}
-      <div className="mt-8 bg-red-50 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-red-800 mb-2">Referral Program Terms</h3>
-        <ul className="text-xs text-red-600 space-y-1">
+    
+      {/* Referral Terms - Enhanced visibility */}
+      <div className="mt-8 bg-red-100 rounded-lg p-4 border border-red-200">
+        <h3 className="text-sm font-bold text-red-900 mb-2">Referral Program Terms</h3>
+        <ul className="text-xs text-red-800 space-y-2 font-medium">
           <li>• Earn 10% commission on referral deposits</li>
           <li>• Referral must complete KYC verification</li>
           <li>• Minimum withdrawal amount for referral earnings: $50</li>
@@ -270,5 +267,6 @@ export default function ReferralPage() {
       </div>
     </div>
     </>
+    
   )
 }

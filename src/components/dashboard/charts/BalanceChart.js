@@ -182,7 +182,7 @@ const BalanceCard = ({
         </motion.div>
         <span
           key={`weekly-return-${title}`}
-          className="text-[0.6rem] sm:text-xs md:text-sm text-white/60 ml-2 font-medium"
+          className="text-[0.6rem] sm:text-xs md:text-xs text-white/60 ml-2 font-medium"
         >
           weekly return
         </span>

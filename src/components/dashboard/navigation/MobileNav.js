@@ -63,7 +63,7 @@ export default function MobileNav() {
       href: `/dashboard/${params.userId}/referrals/list`, 
       icon: FaUsers,
       subItems: [
-        { name: 'My Referrals', href: `/dashboard/${params.userId}/referrals/list` },
+        { name: 'Referrals', href: `/dashboard/${params.userId}/referrals/list` },
       ]
     },
     { 

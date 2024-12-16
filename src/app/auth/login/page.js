@@ -125,155 +125,154 @@ export default function Login() {
         {/* PWA */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="theme-color" content="#7f1d1d" />
         <link rel="canonical" href="https://tradefinancetf.com/auth/login" />
       </Head>
-
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-black to-red-900">
-    <Toaster 
-      position="top-center"
-      toastOptions={{
-        style: {
-          background: '#1F2937',
-          color: '#fff',
-          borderRadius: '10px',
-          padding: '16px'
-        }
-      }} 
-    />
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md mx-4 py-20 h-[100vh] relative z-10"
-      >
-        <div className="bg-white p-8 rounded-2xl shadow-2xl">
-          <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold  mb-2">Welcome Back</h1>
-          <p className="text-gray-400">Access Your Trading Dashboard</p>
-          </div>
-
-          {errors.submit && (
-            <AnimatePresence>
-              <ErrorMessage message={errors.submit} />
-            </AnimatePresence>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6 mt-8">
-          <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    Email Address
-  </label>
-  <div className="relative">
-    <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-    <input
-      type="email"
-      value={formData.email}
-      onChange={(e) => setFormData({...formData, email: e.target.value})}
-      className={`w-full pl-10 pr-4 py-3 rounded-lg border 
-        ${errors.email ? 'border-red-500' : 'border-gray-300'}
-        focus:ring-2 focus:ring-red-500 focus:border-transparent 
-        transition-all duration-200
-        text-gray-900 font-medium
-        placeholder:text-gray-400`}
-      placeholder="Enter your email"
-      disabled={isLoading}
-    />
-  </div>
-  {errors.email && (
-    <motion.p 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="mt-1 text-sm text-red-500"
-    >
-      {errors.email}
-    </motion.p>
-  )}
-</div>
-
-<div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    Password
-  </label>
-  <div className="relative">
-    <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-    <input
-      type={showPassword ? 'text' : 'password'}
-      value={formData.password}
-      onChange={(e) => setFormData({...formData, password: e.target.value})}
-      className={`w-full pl-10 pr-12 py-3 rounded-lg border 
-        ${errors.password ? 'border-red-500' : 'border-gray-300'}
-        focus:ring-2 focus:ring-red-500 focus:border-transparent 
-        transition-all duration-200
-        text-gray-900 font-medium
-        placeholder:text-gray-400`}
-      placeholder="Enter your password"
-      disabled={isLoading}
-    />
-    <button
-      type="button"
-      onClick={() => setShowPassword(!showPassword)}
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-      disabled={isLoading}
-    >
-      {showPassword ? <FaEyeSlash /> : <FaEye />}
-    </button>
-  </div>
-  {errors.password && (
-    <motion.p 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="mt-1 text-sm text-red-500"
-    >
-      {errors.password}
-    </motion.p>
-  )}
-</div>
-
-
-            <div className="flex items-center justify-between">
-              <label className="flex items-center">
-                <input 
-                  type="checkbox" 
-                  className="rounded border-gray-300 text-red-600 focus:ring-red-500"
-                  disabled={isLoading}
-                />
-                <span className="ml-2 text-sm text-gray-600">Remember me</span>
-              </label>
-              <div
-                className="text-sm text-red-600 hover:text-red-500 transition-colors duration-200"
-              >
-                Forgot password?
-              </div>
+  
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-black to-red-900">
+        <Toaster 
+          position="top-center"
+          toastOptions={{
+            style: {
+              background: '#1F2937',
+              color: '#fff',
+              borderRadius: '10px',
+              padding: '16px'
+            }
+          }} 
+        />
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-md mx-4 py-12 h-[100vh] relative z-10"
+        >
+          <div className="bg-white p-8 rounded-2xl shadow-2xl">
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
+              <p className="text-gray-700 font-medium">Access Your Trading Dashboard</p>
             </div>
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold
-                hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
-                disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300
-                transform hover:scale-[1.02]"
-            >
-              {isLoading ? (
-                <span className="flex items-center justify-center">
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Signing in...
-                </span>
-              ) : 'Sign In'}
-            </button>
-          </form>
-
-          <p className="mt-6 text-center text-sm text-gray-600">
-            Don't have an account?{' '}
-            <Link href="/auth/signup" className="text-red-600 hover:text-red-500 font-semibold transition-colors duration-200">
-              Sign up now
-            </Link>
-          </p>
-        </div>
-      </motion.div>
-    </div>
+  
+            {errors.submit && (
+              <AnimatePresence>
+                <ErrorMessage message={errors.submit} />
+              </AnimatePresence>
+            )}
+  
+            <form onSubmit={handleSubmit} className="space-y-6 mt-8">
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    className={`w-full pl-10 pr-4 py-3 rounded-lg border 
+                      ${errors.email ? 'border-red-500' : 'border-gray-300'}
+                      focus:ring-2 focus:ring-red-500 focus:border-transparent 
+                      transition-all duration-200
+                      text-gray-900 font-semibold
+                      placeholder:text-gray-500`}
+                    placeholder="Enter your email"
+                    disabled={isLoading}
+                  />
+                </div>
+                {errors.email && (
+                  <motion.p 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="mt-1 text-sm font-medium text-red-600"
+                  >
+                    {errors.email}
+                  </motion.p>
+                )}
+              </div>
+  
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                    className={`w-full pl-10 pr-12 py-3 rounded-lg border 
+                      ${errors.password ? 'border-red-500' : 'border-gray-300'}
+                      focus:ring-2 focus:ring-red-500 focus:border-transparent 
+                      transition-all duration-200
+                      text-gray-900 font-semibold
+                      placeholder:text-gray-500`}
+                    placeholder="Enter your password"
+                    disabled={isLoading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    disabled={isLoading}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <motion.p 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="mt-1 text-sm font-medium text-red-600"
+                  >
+                    {errors.password}
+                  </motion.p>
+                )}
+              </div>
+  
+              <div className="flex items-center justify-between">
+                <label className="flex items-center">
+                  <input 
+                    type="checkbox" 
+                    className="rounded border-gray-300 text-red-600 focus:ring-red-500"
+                    disabled={isLoading}
+                  />
+                  <span className="ml-2 text-sm font-medium text-gray-700">Remember me</span>
+                </label>
+                <div className="text-sm font-semibold text-red-600 hover:text-red-700 transition-colors duration-200 cursor-pointer">
+                  Forgot password?
+                </div>
+              </div>
+  
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 rounded-lg font-bold
+                  hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
+                  disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300
+                  transform hover:scale-[1.02] text-base"
+              >
+                {isLoading ? (
+                  <span className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Signing in...
+                  </span>
+                ) : 'Sign In'}
+              </button>
+            </form>
+  
+            <p className="mt-6 text-center text-sm font-medium text-gray-700">
+              Don't have an account?{' '}
+              <Link href="/auth/signup" className="text-red-600 hover:text-red-700 font-bold transition-colors duration-200">
+                Sign up now
+              </Link>
+            </p>
+          </div>
+        </motion.div>
+      </div>
     </>
   )
+  
 }
