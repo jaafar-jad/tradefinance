@@ -48,7 +48,7 @@ const faqData = [
     // Returns & ROI
     {
       question: "What kind of returns can I expect?",
-      answer: "Returns vary by plan: Stater plans offer 150% ROI, Basic plans offer 150% total ROI, and our Premium plans offers up to 150% as well."
+      answer: "Returns vary by plan: Stater plans offer 200% ROI, Basic plans offer 200% total ROI, and our Premium plans offers up to 200% as well."
     },
     {
       question: "Are the returns guaranteed?",
@@ -318,7 +318,7 @@ export default function Contact() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className={`flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-lg hover:shadow-xl ${social.color} transition-all duration-300`}
+            className={`flex flex-col items-center text-gray-700 justify-center p-6 bg-white rounded-xl shadow-lg hover:shadow-xl ${social.color} transition-all duration-300`}
           >
             {social.icon}
             <span className="mt-2 text-sm md:text-base font-semibold text-gray-800">{social.name}</span>

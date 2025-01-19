@@ -19,22 +19,12 @@ import SignOutButton from "@/components/ui/SignOutButton/SignOutButton";
 import { investmentPlans } from "@/config/investmentPlans";
 
 
+
 export default function Headerr({ onMenuClick, onRightMenuClick }) {
   const params = useParams();
   const [showProfile, setShowProfile] = useState(false);
   const [showPortfolios, setShowPortfolios] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
-
-  const getAvatarImage = (userProfile) => {
-    if (userProfile?.profileImage?.fields?.file?.url) {
-      return `https:${userProfile.profileImage.fields.file.url}`;
-    }
-
-    // Default to gender-based avatars
-    return userProfile?.gender?.toLowerCase() === 'female' 
-      ? "/avatarfemale.webp" 
-      : "/avatarmale.jpeg";
-  };
   const [realTimeBalances, setRealTimeBalances] = useState({
     mainBalance: 0,
     dailyEarning: 0,
@@ -43,62 +33,78 @@ export default function Headerr({ onMenuClick, onRightMenuClick }) {
     weeklyPercentage: 0,
   });
 
-  const calculateRealTimeBalances = useCallback(
-    (investment, startDate, planDetails) => {
-      const now = new Date();
-      const start = new Date(startDate);
-      const planEndDate = new Date(
-        start.getTime() + planDetails.duration * 30 * 24 * 60 * 60 * 1000
-      );
+  const getAvatarImage = (userProfile) => {
+    if (userProfile?.profileImage?.fields?.file?.url) {
+      return `https:${userProfile.profileImage.fields.file.url}`;
+    }
+    return userProfile?.gender?.toLowerCase() === 'female' 
+      ? "/avatarfemale.webp" 
+      : "/avatarmale.jpeg";
+  };
 
-      if (now > planEndDate) {
-        return {
-          mainBalance: (investment * (1 + planDetails.roi / 100)).toFixed(2),
-          dailyEarning: 0,
-          dailyBonus: 0,
-          totalEarnings: (investment * (planDetails.roi / 100)).toFixed(2),
-          weeklyPercentage: 0,
-          isComplete: true,
-        };
-      }
-
-      const millisecondsPassed = now - start;
-      const daysPassed = millisecondsPassed / (1000 * 60 * 60 * 24);
-      const secondsPassed = millisecondsPassed / 1000;
-
-      const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
-      const secondlyROI = dailyROI / (24 * 60 * 60);
-
-      const dailyBonusRate = planDetails.dailyBonus / 100;
-      const secondlyBonus = dailyBonusRate / (24 * 60 * 60);
-
-      const roiEarnings = investment * secondlyROI * secondsPassed;
-      const bonusEarnings = investment * secondlyBonus * secondsPassed;
-      const totalEarnings = roiEarnings + bonusEarnings;
-
-      const weeklyROI = dailyROI * 7 * 100;
-      const weeklyBonus = dailyBonusRate * 7 * 100;
-      const weeklyPercentage = weeklyROI + weeklyBonus;
-
+  const calculateRealTimeBalances = useCallback((investment, startDate, planDetails) => {
+    if (!investment || !startDate || !planDetails?.duration) {
       return {
-        mainBalance: (investment + totalEarnings).toFixed(2),
-        dailyEarning: (investment * dailyROI).toFixed(2),
-        dailyBonus: (investment * dailyBonusRate).toFixed(2),
-        totalEarnings: totalEarnings.toFixed(2),
-        weeklyPercentage: weeklyPercentage.toFixed(2),
-        isComplete: false,
+        mainBalance: '0.00',
+        dailyEarning: '0.00',
+        dailyBonus: '0.00',
+        totalEarnings: '0.00',
+        weeklyPercentage: '0.00',
+        isComplete: false
       };
-    },
-    []
-  );
+    }
+
+    const now = new Date();
+    const start = new Date(startDate);
+    const planEndDate = new Date(
+      start.getTime() + planDetails.duration * 30 * 24 * 60 * 60 * 1000
+    );
+
+    if (now > planEndDate) {
+      return {
+        mainBalance: (investment * (1 + planDetails.roi / 100)).toFixed(2),
+        dailyEarning: '0.00',
+        dailyBonus: '0.00',
+        totalEarnings: (investment * (planDetails.roi / 100)).toFixed(2),
+        weeklyPercentage: '0.00',
+        isComplete: true,
+      };
+    }
+
+    const millisecondsPassed = now - start;
+    const secondsPassed = millisecondsPassed / 1000;
+
+    const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
+    const secondlyROI = dailyROI / (24 * 60 * 60);
+
+    const dailyBonusRate = planDetails.dailyBonus / 100;
+    const secondlyBonus = dailyBonusRate / (24 * 60 * 60);
+
+    const roiEarnings = investment * secondlyROI * secondsPassed;
+    const bonusEarnings = investment * secondlyBonus * secondsPassed;
+    const totalEarnings = roiEarnings + bonusEarnings;
+
+    const weeklyROI = dailyROI * 7 * 100;
+    const weeklyBonus = dailyBonusRate * 7 * 100;
+    const weeklyPercentage = weeklyROI + weeklyBonus;
+
+    return {
+      mainBalance: (investment + totalEarnings).toFixed(2),
+      dailyEarning: (investment * dailyROI).toFixed(2),
+      dailyBonus: (investment * dailyBonusRate).toFixed(2),
+      totalEarnings: totalEarnings.toFixed(2),
+      weeklyPercentage: weeklyPercentage.toFixed(2),
+      isComplete: false,
+    };
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userString = localStorage.getItem("user");
+        if (!userString) throw new Error("User data not found");
+
         const user = JSON.parse(userString);
-  
-        // Using multiple fields for stronger identification
         const userResponse = await client.getEntries({
           content_type: "userProfile",
           'fields.email': user.email,
@@ -107,60 +113,67 @@ export default function Headerr({ onMenuClick, onRightMenuClick }) {
           'fields.dateOfBirth': user.dateOfBirth,
           include: 3
         });
-  
 
-        if (userResponse.items.length > 0) {
-          const userData = userResponse.items[0].fields;
+        if (!userResponse.items.length) throw new Error("User profile not found");
 
-          const transactionsResponse = await client.getEntries({
-            content_type: "transaction",
-            "fields.user.sys.id": userResponse.items[0].sys.id,
-            "fields.type": "DEPOSIT",
-            order: "-fields.timestamp",
-          });
+        const userData = userResponse.items[0].fields;
+        const transactionsResponse = await client.getEntries({
+          content_type: "transaction",
+          "fields.user.sys.id": userResponse.items[0].sys.id,
+          "fields.type": "DEPOSIT",
+          order: "-fields.timestamp",
+        });
 
-          const totalInvestment = transactionsResponse.items
-            .filter((tx) => tx.fields.status === "COMPLETED")
-            .reduce((sum, tx) => sum + tx.fields.amount, 0);
+        const totalInvestment = transactionsResponse.items
+          .filter((tx) => tx.fields.status === "COMPLETED")
+          .reduce((sum, tx) => sum + tx.fields.amount, 0);
 
-          const planType = userData.currentPlan
-            .toLowerCase()
-            .replace(" plan", "")
-            .replace("couple ", "");
-          const accountType = userData.accountType;
-          const planDetails = investmentPlans[accountType][planType];
+          const planType = userData.currentPlan?.toLowerCase()
+          .replace(" plan", "")
+          .replace("joint ", ""); // Changed from 'joint' to 'joint'
+        
+        const accountType = userData.accountType?.toLowerCase() === 'joint' ? 'joint' : 'single'; // Add this line
 
-          setUserProfile({
-            ...userData,
-            totalInvestment,
-            transactions: transactionsResponse.items,
-          });
+        if (!investmentPlans[accountType]?.[planType]) {
+          throw new Error("Invalid plan configuration");
+        }
 
-          // Initial calculation
-          const initialBalances = calculateRealTimeBalances(
+        const planDetails = investmentPlans[accountType][planType];
+        setUserProfile({
+          ...userData,
+          totalInvestment,
+          transactions: transactionsResponse.items,
+        });
+
+        const initialBalances = calculateRealTimeBalances(
+          totalInvestment,
+          userData.startDate,
+          planDetails
+        );
+        setRealTimeBalances(initialBalances);
+
+        const updateInterval = setInterval(() => {
+          const newBalances = calculateRealTimeBalances(
             totalInvestment,
             userData.startDate,
             planDetails
           );
-          setRealTimeBalances(initialBalances);
+          if (newBalances.isComplete) {
+            clearInterval(updateInterval);
+          }
+          setRealTimeBalances(newBalances);
+        }, 1000);
 
-          // Set up real-time updates
-          const updateInterval = setInterval(() => {
-            const newBalances = calculateRealTimeBalances(
-              totalInvestment,
-              userData.startDate,
-              planDetails
-            );
-            if (newBalances.isComplete) {
-              clearInterval(updateInterval);
-            }
-            setRealTimeBalances(newBalances);
-          }, 1000);
-
-          return () => clearInterval(updateInterval);
-        }
+        return () => clearInterval(updateInterval);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setRealTimeBalances({
+          mainBalance: '0.00',
+          dailyEarning: '0.00',
+          dailyBonus: '0.00',
+          totalEarnings: '0.00',
+          weeklyPercentage: '0.00'
+        });
       }
     };
 

@@ -38,7 +38,7 @@ export default function ProfitChart({ userId }) {
         const startDate = new Date(userData.startDate)
         const planType = userData.currentPlan.toLowerCase()
                         .replace(' plan', '')
-                        .replace('couple ', '')
+                        .replace('joint ', '')
         const accountType = userData.accountType
         const planDetails = investmentPlans[accountType][planType]
 

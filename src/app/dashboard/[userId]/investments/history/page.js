@@ -74,14 +74,14 @@ import Head from 'next/head'
     }, [userId])
 
   const getPlanDetails = (planName) => {
-    const accountType = planName.toLowerCase().includes('couple') ? 'couple' : 'single'
+    const accountType = planName.toLowerCase().includes('joint') ? 'joint' : 'single'
     const level = planName.toLowerCase().includes('starter') ? 'starter' : 
                  planName.toLowerCase().includes('basic') ? 'basic' : 'premium'
     return investmentPlans[accountType][level]
   }
 
   const calculateEarnings = (amount, planDetails) => {
-    // Main ROI earnings (150%)
+    // Main ROI earnings (200%)
     const mainROI = (amount * planDetails.roi) / 100
     
     // Daily bonus accumulated over the duration

@@ -75,7 +75,7 @@ export default function InvestmentChart({ userId }) {
         const startDate = userData.startDate
         const planType = userData.currentPlan.toLowerCase()
                         .replace(' plan', '')
-                        .replace('couple ', '')
+                        .replace('joint ', '')
         const accountType = userData.accountType
         const planDetails = investmentPlans[accountType][planType]
 
@@ -176,7 +176,7 @@ export default function InvestmentChart({ userId }) {
           <div>
             <label className="block text-xs text-gray-600 mb-1">Plan ROI</label>
             <div className="w-full text-xs md:text-sm p-1.5 border rounded bg-gray-50">
-              {investmentPlans[userData?.accountType][userData?.currentPlan.toLowerCase().replace(' plan', '').replace('couple ', '')].roi}%
+              {investmentPlans[userData?.accountType][userData?.currentPlan.toLowerCase().replace(' plan', '').replace('joint ', '')].roi}%
             </div>
           </div>
           <div>

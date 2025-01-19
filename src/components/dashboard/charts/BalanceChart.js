@@ -330,7 +330,7 @@ const BalanceCards = ({
                         userData.currentPlan
                           .toLowerCase()
                           .replace(" plan", "")
-                          .replace("couple ", "")
+                          .replace("joint ", "")
                       ].roi
                     }
                     %
@@ -445,7 +445,7 @@ const BalanceCards = ({
                     userData.currentPlan
                       .toLowerCase()
                       .replace(" plan", "")
-                      .replace("couple ", "")
+                      .replace("joint ", "")
                   ].roi
                 }
                 %
@@ -549,7 +549,7 @@ export default function BalanceCharts({ userId }) {
         const planType = userData.currentPlan
           .toLowerCase()
           .replace(" plan", "")
-          .replace("couple ", "");
+          .replace("joint ", "");
         const accountType = userData.accountType;
         const planDetails = investmentPlans[accountType][planType];
 
@@ -619,7 +619,7 @@ export default function BalanceCharts({ userId }) {
       userData.currentPlan
         .toLowerCase()
         .replace(" plan", "")
-        .replace("couple ", "")
+        .replace("joint ", "")
     ].duration
   );
 

@@ -87,68 +87,68 @@ const plans = [
     category: "single",
   },
 
-  // Couple Plans
+  // joint Plans
   {
-    name: investmentPlans.couple.starter.name,
+    name: investmentPlans.joint.starter.name,
     icon: <FaUsers className="text-4xl text-white" />,
-    duration: `${investmentPlans.couple.starter.duration} Months`,
-    roi: `${investmentPlans.couple.starter.roi}% Total ROI`,
-    monthlyRoi: `${investmentPlans.couple.starter.dailyBonus}% Daily`,
-    minimum: `$${investmentPlans.couple.starter.minAmount}`,
-    maximum: `$${investmentPlans.couple.starter.maxAmount}`,
+    duration: `${investmentPlans.joint.starter.duration} Months`,
+    roi: `${investmentPlans.joint.starter.roi}% Total ROI`,
+    monthlyRoi: `${investmentPlans.joint.starter.dailyBonus}% Daily`,
+    minimum: `$${investmentPlans.joint.starter.minAmount}`,
+    maximum: `$${investmentPlans.joint.starter.maxAmount}`,
     referral: "5%",
     features: [
-      `${investmentPlans.couple.starter.dailyBonus}% Daily Bonus`,
-      `${investmentPlans.couple.starter.coupleBonus}% Couple Bonus`,
+      `${investmentPlans.joint.starter.dailyBonus}% Daily Bonus`,
+      `${investmentPlans.joint.starter.jointBonus}% joint Bonus`,
       "Joint Portfolio Access",
-      "Couple Support",
+      "joint Support",
     ],
     color: "from-red-500 to-red-400",
     popular: false,
-    category: "couple",
+    category: "joint",
   },
   {
-    name: investmentPlans.couple.basic.name,
+    name: investmentPlans.joint.basic.name,
     icon: <FaUserFriends className="text-4xl text-white" />,
-    duration: `${investmentPlans.couple.basic.duration} Months`,
-    roi: `${investmentPlans.couple.basic.roi}% Total ROI`,
-    monthlyRoi: `${investmentPlans.couple.basic.dailyBonus}% Daily`,
-    minimum: `$${investmentPlans.couple.basic.minAmount}`,
-    maximum: `$${investmentPlans.couple.basic.maxAmount}`,
+    duration: `${investmentPlans.joint.basic.duration} Months`,
+    roi: `${investmentPlans.joint.basic.roi}% Total ROI`,
+    monthlyRoi: `${investmentPlans.joint.basic.dailyBonus}% Daily`,
+    minimum: `$${investmentPlans.joint.basic.minAmount}`,
+    maximum: `$${investmentPlans.joint.basic.maxAmount}`,
     referral: "5%",
     features: [
-      `${investmentPlans.couple.basic.dailyBonus}% Daily Bonus`,
-      `${investmentPlans.couple.basic.coupleBonus}% Couple Bonus`,
+      `${investmentPlans.joint.basic.dailyBonus}% Daily Bonus`,
+      `${investmentPlans.joint.basic.jointBonus}% joint Bonus`,
       "Enhanced Joint Tools",
-      "Priority Couple Support",
+      "Priority joint Support",
     ],
     color: "from-red-600 to-red-500",
     popular: true,
-    category: "couple",
+    category: "joint",
   },
   {
-    name: investmentPlans.couple.premium.name,
+    name: investmentPlans.joint.premium.name,
     icon: <FaGem className="text-4xl text-white" />,
-    duration: `${investmentPlans.couple.premium.duration} Months`,
-    roi: `${investmentPlans.couple.premium.roi}% Total ROI`,
-    monthlyRoi: `${investmentPlans.couple.premium.dailyBonus}% Daily`,
-    minimum: `$${investmentPlans.couple.premium.minAmount}`,
+    duration: `${investmentPlans.joint.premium.duration} Months`,
+    roi: `${investmentPlans.joint.premium.roi}% Total ROI`,
+    monthlyRoi: `${investmentPlans.joint.premium.dailyBonus}% Daily`,
+    minimum: `$${investmentPlans.joint.premium.minAmount}`,
     maximum: `${
-      investmentPlans.couple.premium.maxAmount === Infinity
+      investmentPlans.joint.premium.maxAmount === Infinity
         ? "Unlimited"
-        : `$${investmentPlans.couple.premium.maxAmount}`
+        : `$${investmentPlans.joint.premium.maxAmount}`
     }`,
     referral: "5%",
     features: [
-      `${investmentPlans.couple.premium.dailyBonus}% Daily Bonus`,
-      `${investmentPlans.couple.premium.coupleBonus}% Couple Bonus`,
-      "Premium Couple Suite",
-      "VIP Couple Benefits",
+      `${investmentPlans.joint.premium.dailyBonus}% Daily Bonus`,
+      `${investmentPlans.joint.premium.jointBonus}% joint Bonus`,
+      "Premium joint Suite",
+      "VIP joint Benefits",
       "Advanced Joint Trading",
     ],
     color: "from-red-700 to-red-600",
     popular: false,
-    category: "couple",
+    category: "joint",
   },
 ];
 
@@ -161,12 +161,12 @@ const chartData = [
       investmentPlans.single.basic.dailyBonus * 30,
     [investmentPlans.single.premium.name]:
       investmentPlans.single.premium.dailyBonus * 30,
-    [investmentPlans.couple.starter.name]:
-      investmentPlans.couple.starter.dailyBonus * 30,
-    [investmentPlans.couple.basic.name]:
-      investmentPlans.couple.basic.dailyBonus * 30,
-    [investmentPlans.couple.premium.name]:
-      investmentPlans.couple.premium.dailyBonus * 30,
+    [investmentPlans.joint.starter.name]:
+      investmentPlans.joint.starter.dailyBonus * 30,
+    [investmentPlans.joint.basic.name]:
+      investmentPlans.joint.basic.dailyBonus * 30,
+    [investmentPlans.joint.premium.name]:
+      investmentPlans.joint.premium.dailyBonus * 30,
   },
   {
     period: "Month 2",
@@ -176,12 +176,12 @@ const chartData = [
       investmentPlans.single.basic.dailyBonus * 60,
     [investmentPlans.single.premium.name]:
       investmentPlans.single.premium.dailyBonus * 60,
-    [investmentPlans.couple.starter.name]:
-      investmentPlans.couple.starter.dailyBonus * 60,
-    [investmentPlans.couple.basic.name]:
-      investmentPlans.couple.basic.dailyBonus * 60,
-    [investmentPlans.couple.premium.name]:
-      investmentPlans.couple.premium.dailyBonus * 60,
+    [investmentPlans.joint.starter.name]:
+      investmentPlans.joint.starter.dailyBonus * 60,
+    [investmentPlans.joint.basic.name]:
+      investmentPlans.joint.basic.dailyBonus * 60,
+    [investmentPlans.joint.premium.name]:
+      investmentPlans.joint.premium.dailyBonus * 60,
   },
   {
     period: "Month 4",
@@ -191,12 +191,12 @@ const chartData = [
       investmentPlans.single.basic.dailyBonus * 120,
     [investmentPlans.single.premium.name]:
       investmentPlans.single.premium.dailyBonus * 120,
-    [investmentPlans.couple.starter.name]:
-      investmentPlans.couple.starter.dailyBonus * 120,
-    [investmentPlans.couple.basic.name]:
-      investmentPlans.couple.basic.dailyBonus * 120,
-    [investmentPlans.couple.premium.name]:
-      investmentPlans.couple.premium.dailyBonus * 120,
+    [investmentPlans.joint.starter.name]:
+      investmentPlans.joint.starter.dailyBonus * 120,
+    [investmentPlans.joint.basic.name]:
+      investmentPlans.joint.basic.dailyBonus * 120,
+    [investmentPlans.joint.premium.name]:
+      investmentPlans.joint.premium.dailyBonus * 120,
   },
   {
     period: "Month 6",
@@ -206,12 +206,12 @@ const chartData = [
       investmentPlans.single.basic.dailyBonus * 180,
     [investmentPlans.single.premium.name]:
       investmentPlans.single.premium.dailyBonus * 180,
-    [investmentPlans.couple.starter.name]:
-      investmentPlans.couple.starter.dailyBonus * 180,
-    [investmentPlans.couple.basic.name]:
-      investmentPlans.couple.basic.dailyBonus * 180,
-    [investmentPlans.couple.premium.name]:
-      investmentPlans.couple.premium.dailyBonus * 180,
+    [investmentPlans.joint.starter.name]:
+      investmentPlans.joint.starter.dailyBonus * 180,
+    [investmentPlans.joint.basic.name]:
+      investmentPlans.joint.basic.dailyBonus * 180,
+    [investmentPlans.joint.premium.name]:
+      investmentPlans.joint.premium.dailyBonus * 180,
   },
 ];
 
@@ -221,24 +221,24 @@ export default function HomePlans() {
 
   const calculateReturns = (amount, plan) => {
     if (!amount) return 0;
-
+  
     const principal = parseFloat(amount);
     const dailyReturn = principal * (plan.dailyBonus / 100);
     const daysInPeriod = plan.duration * 30;
     const totalDailyReturns = dailyReturn * daysInPeriod;
-
-    // Base ROI (150% for all plans)
-    const baseROI = principal * 1.5;
-
-    // Add couple bonus if applicable
-    if (plan.accountType === "couple") {
-      const coupleBonus = (principal * plan.coupleBonus) / 100;
-      return (baseROI + totalDailyReturns + coupleBonus).toFixed(2);
+  
+    // Base ROI (200% for all plans)
+    const baseROI = principal * 2; // Changed from 1.5 to 2 for 200% ROI
+  
+    // Add joint bonus if applicable
+    if (plan.accountType === "joint" || plan.accountType === "Joint") {
+      const jointBonus = (principal * plan.jointBonus) / 100;
+      return (baseROI + totalDailyReturns + jointBonus).toFixed(2);
     }
-
+  
     return (baseROI + totalDailyReturns).toFixed(2);
   };
-
+  
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Plans Grid */}
@@ -354,20 +354,20 @@ export default function HomePlans() {
                   dataKey={investmentPlans.single.premium.name}
                   stroke="#7F1D1D"
                 />
-                {/* Couple Plans */}
+                {/* joint Plans */}
                 <Line
                   type="monotone"
-                  dataKey={investmentPlans.couple.starter.name}
+                  dataKey={investmentPlans.joint.starter.name}
                   stroke="#1D4ED8"
                 />
                 <Line
                   type="monotone"
-                  dataKey={investmentPlans.couple.basic.name}
+                  dataKey={investmentPlans.joint.basic.name}
                   stroke="#1E40AF"
                 />
                 <Line
                   type="monotone"
-                  dataKey={investmentPlans.couple.premium.name}
+                  dataKey={investmentPlans.joint.premium.name}
                   stroke="#1E3A8A"
                 />
               </LineChart>
@@ -420,7 +420,7 @@ export default function HomePlans() {
                         ? investmentPlans.single[
                             plan.name.toLowerCase().split(" ")[0]
                           ]
-                        : investmentPlans.couple[
+                        : investmentPlans.joint[
                             plan.name.toLowerCase().split(" ")[1]
                           ];
 

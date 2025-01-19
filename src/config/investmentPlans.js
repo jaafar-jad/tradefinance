@@ -4,7 +4,7 @@ export  const investmentPlans = {
       name: "Starter Plan",
       minAmount: 100,
       maxAmount: 4999,
-      roi: 150, // 150% total ROI
+      roi: 200, // 200% total ROI
       duration: 6, // 6 months
       dailyBonus: 0.15, // 0.15% daily ≈ 27% over 6 months
       accountType: "single"
@@ -13,7 +13,7 @@ export  const investmentPlans = {
       name: "Basic Plan",
       minAmount: 5000,
       maxAmount: 14999,
-      roi: 150,
+      roi: 200,
       duration: 4,
       dailyBonus: 0.20, // 0.20% daily ≈ 24% over 4 months
       accountType: "single"
@@ -22,42 +22,42 @@ export  const investmentPlans = {
       name: "Premium Plan",
       minAmount: 15000,
       maxAmount: Infinity,
-      roi: 150,
+      roi: 200,
       duration: 2,
       dailyBonus: 0.35, // 0.35% daily ≈ 21% over 2 months
       accountType: "single"
     }
   },
-  couple: {
+  joint: {
     starter: {
-      name: "Couple Starter Plan",
+      name: "Joint Starter Plan",
       minAmount: 100,
       maxAmount: 4999,
-      roi: 150,
+      roi: 200,
       duration: 6,
       dailyBonus: 0.20, // 0.20% daily ≈ 36% over 6 months
-      accountType: "couple",
-      coupleBonus: 25
+      accountType: "joint",
+      jointBonus: 25
     },
     basic: {
-      name: "Couple Basic Plan",
+      name: "Joint Basic Plan",
       minAmount: 5000,
       maxAmount: 14999,
-      roi: 150,
+      roi: 200,
       duration: 4,
       dailyBonus: 0.25, // 0.25% daily ≈ 30% over 4 months
-      accountType: "couple",
-      coupleBonus: 50
+      accountType: "joint",
+      jointBonus: 50
     },
     premium: {
-      name: "Couple Premium Plan",
+      name: "Joint Premium Plan",
       minAmount: 15000,
       maxAmount: Infinity,
-      roi: 150,
+      roi: 200,
       duration: 2,
       dailyBonus: 0.40, // 0.40% daily ≈ 24% over 2 months
-      accountType: "couple",
-      coupleBonus: 75
+      accountType: "joint",
+      jointBonus: 75
     }
   }
 };

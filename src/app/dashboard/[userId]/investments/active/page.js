@@ -25,21 +25,21 @@ const allPlans = [
     color: 'from-red-800 to-black',
     features: ['Daily Bonus: 0.35%', `Duration: ${investmentPlans.single.premium.duration} months`, 'VIP Benefits']
   },
-  // Couple Plans
+  // joint Plans
   {
-    ...investmentPlans.couple.starter,
+    ...investmentPlans.joint.starter,
     color: 'from-red-600 to-red-800',
-    features: ['Daily Bonus: 0.20%', `Duration: ${investmentPlans.couple.starter.duration} months`, 'Joint Account Benefits']
+    features: ['Daily Bonus: 0.20%', `Duration: ${investmentPlans.joint.starter.duration} months`, 'Joint Account Benefits']
   },
   {
-    ...investmentPlans.couple.basic,
+    ...investmentPlans.joint.basic,
     color: 'from-red-700 to-red-900',
-    features: ['Daily Bonus: 0.25%', `Duration: ${investmentPlans.couple.basic.duration} months`, 'Dedicated Account Manager']
+    features: ['Daily Bonus: 0.25%', `Duration: ${investmentPlans.joint.basic.duration} months`, 'Dedicated Account Manager']
   },
   {
-    ...investmentPlans.couple.premium,
+    ...investmentPlans.joint.premium,
     color: 'from-red-800 to-black',
-    features: ['Daily Bonus: 0.40%', `Duration: ${investmentPlans.couple.premium.duration} months`, 'Premium Couple Benefits']
+    features: ['Daily Bonus: 0.40%', `Duration: ${investmentPlans.joint.premium.duration} months`, 'Premium joint Benefits']
   }
 ]
 
@@ -94,7 +94,7 @@ export default function InvestmentActivePlansPage() {
       {/* Investment Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         {[
-          { icon: FaRocket, label: 'ROI', value: '150%' },
+          { icon: FaRocket, label: 'ROI', value: '200%' },
           { icon: FaDollarSign, label: 'Min Investment', value: '$500' },
           { icon: FaPercent, label: 'Daily Bonus', value: '0.15-0.40%' },
           { icon: FaClock, label: 'Duration', value: '2-6 Months' }
