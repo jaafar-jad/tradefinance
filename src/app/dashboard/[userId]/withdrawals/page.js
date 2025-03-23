@@ -1,21 +1,72 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaLock, FaUnlock, FaExclamationTriangle, FaArrowRight, FaBitcoin, FaEthereum, FaWallet, FaInfoCircle, FaCheckCircle } from 'react-icons/fa';
 import { SiBinance, SiDogecoin, SiTether } from 'react-icons/si';
 import Link from 'next/link';
 import Head from 'next/head';
-import BalanceCharts from '@/components/dashboard/charts/BalanceChart';
 import { client } from '@/lib/contentful';
 import { investmentPlans } from '@/config/investmentPlans';
 import { useParams } from 'next/navigation';
-const calculateRealTimeBalances = (investment, startDate, planDetails) => {
+
+// Import the calculation functions from BalanceChart or redefine them here
+const calculateRealTimeBalances = (
+  investment,
+  startDate,
+  planDetails,
+  accountStatus = "Active",
+  lastSuspensionDate = null,
+  totalSuspendedDays = 0,
+  bonusDays = 0
+) => {
+  // Use current timestamp for real-time calculations
   const now = new Date();
   const start = new Date(startDate);
-  const planEndDate = new Date(start.getTime() + planDetails.duration * 30 * 24 * 60 * 60 * 1000);
 
-  if (now > planEndDate) {
+  // Calculate calendar days since account started
+  const calendarDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+
+  // Add milliseconds for real-time updates
+  const millisecondsPassed = now - start;
+  const dayFraction =
+    millisecondsPassed / (1000 * 60 * 60 * 24) -
+    Math.floor(millisecondsPassed / (1000 * 60 * 60 * 24));
+
+  // For suspended accounts, calculate up to suspension date
+  if (accountStatus === "Suspended" && lastSuspensionDate) {
+    const suspensionDate = new Date(lastSuspensionDate);
+    const daysUntilSuspension = Math.floor(
+      (suspensionDate - start) / (1000 * 60 * 60 * 24)
+    );
+
+    // Keep original suspension logic but add bonus days
+    const activeDays = daysUntilSuspension - totalSuspendedDays + bonusDays;
+
+    // Calculate earnings based on active days only
+    const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
+    const dailyBonusRate = planDetails.dailyBonus / 100;
+    const totalDailyRate = dailyROI + dailyBonusRate;
+
+    const earnings = investment * totalDailyRate * activeDays;
+    const weeklyPercentage = (dailyROI + dailyBonusRate) * 7 * 100;
+
+    return {
+      mainBalance: (investment + earnings).toFixed(2),
+      dailyEarning: (investment * dailyROI).toFixed(2),
+      dailyBonus: (investment * dailyBonusRate).toFixed(2),
+      totalEarnings: earnings.toFixed(2),
+      weeklyPercentage: weeklyPercentage.toFixed(2),
+      isSuspended: true,
+    };
+  }
+
+  // For active accounts, subtract suspended days but add bonus days
+  const activeDays =
+    calendarDays - totalSuspendedDays + bonusDays + dayFraction;
+
+  // Check if plan has ended based on active days
+  if (activeDays >= planDetails.duration * 30) {
     return {
       mainBalance: (investment * (1 + planDetails.roi / 100)).toFixed(2),
       dailyEarning: 0,
@@ -26,23 +77,54 @@ const calculateRealTimeBalances = (investment, startDate, planDetails) => {
     };
   }
 
-  const millisecondsPassed = now - start;
-  const secondsPassed = millisecondsPassed / 1000;
+  // Regular calculation for active accounts with real-time updates
   const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
-  const secondlyROI = dailyROI / (24 * 60 * 60);
   const dailyBonusRate = planDetails.dailyBonus / 100;
-  const secondlyBonus = dailyBonusRate / (24 * 60 * 60);
-  const roiEarnings = investment * secondlyROI * secondsPassed;
-  const bonusEarnings = investment * secondlyBonus * secondsPassed;
-  const totalEarnings = roiEarnings + bonusEarnings;
+  const totalDailyRate = dailyROI + dailyBonusRate;
+
+  const earnings = investment * totalDailyRate * activeDays;
+  const weeklyPercentage = (dailyROI + dailyBonusRate) * 7 * 100;
 
   return {
-    mainBalance: (investment + totalEarnings).toFixed(2),
+    mainBalance: (investment + earnings).toFixed(2),
     dailyEarning: (investment * dailyROI).toFixed(2),
     dailyBonus: (investment * dailyBonusRate).toFixed(2),
-    totalEarnings: totalEarnings.toFixed(2),
-    weeklyPercentage: ((dailyROI + dailyBonusRate) * 7 * 100).toFixed(2),
+    totalEarnings: earnings.toFixed(2),
+    weeklyPercentage: weeklyPercentage.toFixed(2),
     isComplete: false,
+  };
+};
+
+const calculatePlanDates = (
+  startDate,
+  planDuration,
+  totalSuspendedDays = 0,
+  bonusDays = 0
+) => {
+  const start = new Date(startDate);
+  const today = new Date();
+
+  const calendarDays = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+
+  // Subtract suspended days but add bonus days
+  const activeDays = Math.max(0, calendarDays - totalSuspendedDays + bonusDays);
+
+  // Adjust end date to account for both suspended days and bonus days
+  const adjustedEndDate = new Date(
+    start.getTime() +
+      (planDuration * 30 + totalSuspendedDays - bonusDays) * 24 * 60 * 60 * 1000
+  );
+
+  const totalDays = planDuration * 30;
+  const daysRemaining = Math.max(0, totalDays - activeDays);
+
+  return {
+    startDate: start.toLocaleDateString(),
+    endDate: adjustedEndDate.toLocaleDateString(),
+    currentDay: activeDays,
+    totalDays,
+    daysRemaining,
+    progress: Math.min(100, (activeDays / totalDays) * 100),
   };
 };
 
@@ -87,6 +169,7 @@ export default function WithdrawalPage() {
   const [loading, setLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [accountStatus, setAccountStatus] = useState("Active");
   const params = useParams();
 
   useEffect(() => {
@@ -107,10 +190,31 @@ export default function WithdrawalPage() {
         
         const userData = userResponse.items[0].fields;
         setUserData(userData);
+        setAccountStatus(userData.accountStatus || "Active");
         
-        const planType = userData.currentPlan.toLowerCase().replace(" plan", "").replace("couple ", "");
-        const accountType = userData.accountType;
+        // Add error handling for plan type extraction
+        let planType = "";
+        try {
+          planType = userData.currentPlan.toLowerCase().replace(" plan", "").replace("joint ", "");
+        } catch (err) {
+          console.error("Error processing plan type:", err);
+          return; // Exit if we can't process the plan type
+        }
+        
+        const accountType = userData.accountType || "individual"; // Default to individual if not specified
+        
+        // Check if the plan exists before trying to access it
+        if (!investmentPlans[accountType] || !investmentPlans[accountType][planType]) {
+          console.error(`Plan not found: accountType=${accountType}, planType=${planType}`);
+          return; // Exit if plan doesn't exist
+        }
+        
         const planDetails = investmentPlans[accountType][planType];
+
+        // Get suspension data and bonus days
+        const totalSuspendedDays = userData.totalSuspendedDays || 0;
+        const bonusDays = userData.bonusDays || 0;
+        const lastSuspensionDate = userData.lastSuspensionDate || null;
 
         const transactionsResponse = await client.getEntries({
           content_type: "transaction",
@@ -129,28 +233,42 @@ export default function WithdrawalPage() {
           .filter(tx => tx.type === "DEPOSIT")
           .reduce((sum, tx) => sum + tx.amount, 0);
 
+        // Use the updated calculation function
         const balances = calculateRealTimeBalances(
           totalInvestment,
           userData.startDate,
-          planDetails
+          planDetails,
+          userData.accountStatus,
+          lastSuspensionDate,
+          totalSuspendedDays,
+          bonusDays
         );
 
         setCurrentBalance(parseFloat(balances.mainBalance));
         setUnlockFee(parseFloat(balances.mainBalance) * 0.05);
         setTerminationFee(parseFloat(balances.mainBalance) * 0.10);
 
-        const now = new Date();
-        const startDate = new Date(userData.startDate);
-        const planEndDate = new Date(startDate.getTime() + planDetails.duration * 30 * 24 * 60 * 60 * 1000);
-        const daysLeft = Math.max(0, Math.ceil((planEndDate - now) / (1000 * 60 * 60 * 24)));
-        setDaysRemaining(daysLeft);
-        setIsPlanComplete(now >= planEndDate);
+        // Calculate plan dates with suspended and bonus days
+        const planDates = calculatePlanDates(
+          userData.startDate,
+          planDetails.duration,
+          totalSuspendedDays,
+          bonusDays
+        );
+        
+        setDaysRemaining(planDates.daysRemaining);
+        setIsPlanComplete(planDates.daysRemaining === 0 || balances.isComplete);
 
+        // Set up real-time balance updates
         const updateInterval = setInterval(() => {
           const newBalances = calculateRealTimeBalances(
             totalInvestment,
             userData.startDate,
-            planDetails
+            planDetails,
+            userData.accountStatus,
+            lastSuspensionDate,
+            totalSuspendedDays,
+            bonusDays
           );
           
           setCurrentBalance(parseFloat(newBalances.mainBalance));
@@ -197,6 +315,7 @@ export default function WithdrawalPage() {
       setLoading(false);
     }
   };
+
   const renderWithdrawalRules = () => (
     <div className="bg-gradient-to-br from-red-50 to-white p-6 rounded-xl shadow-xl">
       <h3 className="text-xl font-bold text-gray-900 mb-4">Withdrawal Rules</h3>
@@ -235,7 +354,7 @@ export default function WithdrawalPage() {
             onChange={(e) => setWithdrawalForm({...withdrawalForm, amount: e.target.value})}
           />
         </div>
-  
+
         <div className="space-y-2">
           <label className="text-sm font-bold text-gray-900">Select Cryptocurrency</label>
           <select
@@ -252,7 +371,7 @@ export default function WithdrawalPage() {
             ))}
           </select>
         </div>
-  
+
         <div className="space-y-2">
           <label className="text-sm font-bold text-gray-900">Wallet Address</label>
           <input
@@ -263,7 +382,7 @@ export default function WithdrawalPage() {
             onChange={(e) => setWithdrawalForm({...withdrawalForm, walletAddress: e.target.value})}
           />
         </div>
-  
+
         <button
           type="submit"
           disabled={loading}
@@ -286,7 +405,7 @@ export default function WithdrawalPage() {
           <h3 className="text-xl font-bold text-gray-900">Partial Withdrawal</h3>
           <FaUnlock className="text-2xl text-red-600" />
         </div>
-  
+
         <div className="space-y-3 text-gray-900">
           <p className="font-medium">
             Unlock Fee (5%): <span className="font-bold text-red-600">${unlockFee.toLocaleString()}</span>
@@ -295,17 +414,15 @@ export default function WithdrawalPage() {
             Available (50%): <span className="font-bold text-green-600">${(currentBalance * 0.5).toLocaleString()}</span>
           </p>
         </div>
-  
+
         <Link
-  href={`/dashboard/${params.userId}/deposits?amount=${unlockFee}&purpose=unlock`}
-  className="mt-6 block w-full py-3 text-center font-bold text-white rounded-lg bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900"
->
-  Pay Unlock Fee
-</Link>
-
-
+          href={`/dashboard/${params.userId}/deposits?amount=${unlockFee}&purpose=unlock`}
+          className="mt-6 block w-full py-3 text-center font-bold text-white rounded-lg bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900"
+        >
+          Pay Unlock Fee
+        </Link>
       </motion.div>
-  
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -315,7 +432,7 @@ export default function WithdrawalPage() {
           <h3 className="text-xl font-bold text-gray-900">Full Termination</h3>
           <FaLock className="text-2xl text-red-800" />
         </div>
-  
+
         <div className="space-y-3 text-gray-900">
           <p className="font-medium">
             Termination Fee (10%): <span className="font-bold text-red-600">${terminationFee.toLocaleString()}</span>
@@ -324,7 +441,7 @@ export default function WithdrawalPage() {
             Available (100%): <span className="font-bold text-green-600">${currentBalance.toLocaleString()}</span>
           </p>
         </div>
-  
+
         <Link
           href={`/dashboard/${params.userId}/deposits?amount=${terminationFee}&purpose=termination`}
           className="mt-6 block w-full py-3 text-center font-bold text-white rounded-lg bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900"
@@ -335,28 +452,51 @@ export default function WithdrawalPage() {
     </div>
   );
   
+  // Add a suspended account message
+  const renderSuspendedMessage = () => (
+    <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-xl shadow-xl">
+      <div className="flex items-start space-x-3">
+        <FaExclamationTriangle className="text-red-600 text-xl flex-shrink-0 mt-1" />
+        <div>
+          <h3 className="text-xl font-bold text-red-700 mb-2">Account Suspended</h3>
+          <p className="text-red-600 mb-4">
+            {userData?.suspensionReason || 
+             "Your account is currently suspended. Withdrawals are not available until your account is reactivated."}
+          </p>
+          <p className="text-sm text-red-500">
+            Please contact customer support for assistance.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <Head>
         <title>Withdraw Funds | Investment Platform</title>
         <meta name="description" content="Secure withdrawal system for your investments" />
       </Head>
-  
-      <div className=" mx-auto p-2 space-y-2">
+
+      <div className="mx-auto p-2 space-y-2">
         <div className="bg-gradient-to-r from-red-900 via-red-800 to-black p-6 rounded-xl shadow-xl">
           <h1 className="text-3xl font-bold text-white mb-2">Withdraw Funds</h1>
           <p className="text-red-100 font-medium">
-            {isPlanComplete 
-              ? "Your investment plan is complete - full withdrawal available" 
-              : `${daysRemaining} days remaining until regular withdrawal`}
+            {accountStatus === "Suspended" ? (
+              "Account suspended - withdrawals unavailable"
+            ) : isPlanComplete ? (
+              "Your investment plan is complete - full withdrawal available"
+            ) : (
+              `${daysRemaining} days remaining until regular withdrawal`
+            )}
           </p>
         </div>
-  
-        
-  
+
         {renderWithdrawalRules()}
-  
-        {isPlanComplete ? (
+
+        {accountStatus === "Suspended" ? (
+          renderSuspendedMessage()
+        ) : isPlanComplete ? (
           renderWithdrawalForm()
         ) : (
           <>
@@ -371,7 +511,7 @@ export default function WithdrawalPage() {
             {renderEarlyWithdrawalOptions()}
           </>
         )}
-  
+
         <AnimatePresence>
           {showConfirmation && (
             <motion.div

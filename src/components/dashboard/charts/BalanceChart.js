@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -8,6 +9,7 @@ import {
   FaWallet,
   FaHistory,
   FaArrowUp,
+  FaExclamationTriangle,
 } from "react-icons/fa";
 import { SiRipple, SiLitecoin, SiDogecoin, SiNear } from "react-icons/si";
 import {
@@ -24,41 +26,63 @@ import {
 import { client } from "@/lib/contentful";
 import { investmentPlans } from "@/config/investmentPlans";
 
-export const calculatePlanDates = (startDate, planDuration) => {
+export const calculatePlanDates = (
+  startDate,
+  planDuration,
+  totalSuspendedDays = 0,
+  bonusDays = 0
+) => {
   const start = new Date(startDate);
-  const end = new Date(
-    start.getTime() + planDuration * 30 * 24 * 60 * 60 * 1000
-  );
   const today = new Date();
-  const daysPassed = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+
+  const calendarDays = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+
+  // Subtract suspended days but add bonus days
+  const activeDays = Math.max(0, calendarDays - totalSuspendedDays + bonusDays);
+
+  // Adjust end date to account for both suspended days and bonus days
+  const adjustedEndDate = new Date(
+    start.getTime() +
+      (planDuration * 30 + totalSuspendedDays - bonusDays) * 24 * 60 * 60 * 1000
+  );
+
   const totalDays = planDuration * 30;
-  const daysRemaining = totalDays - daysPassed;
+  const daysRemaining = Math.max(0, totalDays - activeDays);
 
   return {
     startDate: start.toLocaleDateString(),
-    endDate: end.toLocaleDateString(),
-    currentDay: daysPassed,
+    endDate: adjustedEndDate.toLocaleDateString(),
+    currentDay: activeDays,
     totalDays,
     daysRemaining,
-    progress: (daysPassed / totalDays) * 100,
+    progress: Math.min(100, (activeDays / totalDays) * 100),
   };
 };
 
-export const generateDailyStats = (investment, startDate, planDetails) => {
+// Replace the generateDailyStats function with this corrected version
+export const generateDailyStats = (
+  investment,
+  startDate,
+  planDetails,
+  totalSuspendedDays = 0
+) => {
   const stats = [];
   const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
   const dailyBonusRate = planDetails.dailyBonus / 100;
   const totalDailyRate = dailyROI + dailyBonusRate;
 
+  // Generate stats for active days only
   for (let day = 1; day <= planDetails.duration * 30; day++) {
     const earnings = investment * totalDailyRate * day;
     const balance = investment + earnings;
+
     stats.push({
       day: `Day ${day}`,
       earnings: earnings,
       balance: balance,
     });
   }
+
   return stats;
 };
 
@@ -346,11 +370,11 @@ const BalanceCards = ({
                     className="text-white/60 text-[0.65rem] sm:text-xs md:text-sm font-medium"
                   >
                     Total Deposits:{" "}
-                    {
-                      userData.transactions.filter(
-                        (tx) => tx.type === "DEPOSIT"
-                      ).length
-                    }
+                    {userData?.transactions
+                      ? userData.transactions.filter(
+                          (tx) => tx.type === "DEPOSIT"
+                        ).length
+                      : 0}
                   </span>
                 </div>
               }
@@ -461,10 +485,10 @@ const BalanceCards = ({
                 className="text-white/60 text-[0.65rem] sm:text-xs md:text-sm font-medium"
               >
                 Total Deposits:{" "}
-                {
-                  userData.transactions.filter((tx) => tx.type === "DEPOSIT")
-                    .length
-                }
+                {userData?.transactions
+                  ? userData.transactions.filter((tx) => tx.type === "DEPOSIT")
+                      .length
+                  : 0}
               </span>
             </div>
           }
@@ -487,15 +511,65 @@ export default function BalanceCharts({ userId }) {
     weeklyPercentage: 0.0,
   });
 
+  // Modify the calculateRealTimeBalances function to account for suspension periods
+  // Modify the calculateRealTimeBalances function to include real-time updates
   const calculateRealTimeBalances = useCallback(
-    (investment, startDate, planDetails) => {
+    (
+      investment,
+      startDate,
+      planDetails,
+      accountStatus,
+      lastSuspensionDate,
+      totalSuspendedDays = 0,
+      bonusDays = 0
+    ) => {
+      // Use current timestamp for real-time calculations
       const now = new Date();
       const start = new Date(startDate);
-      const planEndDate = new Date(
-        start.getTime() + planDetails.duration * 30 * 24 * 60 * 60 * 1000
-      );
 
-      if (now > planEndDate) {
+      // Calculate calendar days since account started
+      const calendarDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+
+      // Add milliseconds for real-time updates
+      const millisecondsPassed = now - start;
+      const dayFraction =
+        millisecondsPassed / (1000 * 60 * 60 * 24) -
+        Math.floor(millisecondsPassed / (1000 * 60 * 60 * 24));
+
+      // For suspended accounts, calculate up to suspension date
+      if (accountStatus === "Suspended" && lastSuspensionDate) {
+        const suspensionDate = new Date(lastSuspensionDate);
+        const daysUntilSuspension = Math.floor(
+          (suspensionDate - start) / (1000 * 60 * 60 * 24)
+        );
+
+        // Keep original suspension logic but add bonus days
+        const activeDays = daysUntilSuspension - totalSuspendedDays + bonusDays;
+
+        // Calculate earnings based on active days only
+        const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
+        const dailyBonusRate = planDetails.dailyBonus / 100;
+        const totalDailyRate = dailyROI + dailyBonusRate;
+
+        const earnings = investment * totalDailyRate * activeDays;
+        const weeklyPercentage = (dailyROI + dailyBonusRate) * 7 * 100;
+
+        return {
+          mainBalance: (investment + earnings).toFixed(2),
+          dailyEarning: (investment * dailyROI).toFixed(2),
+          dailyBonus: (investment * dailyBonusRate).toFixed(2),
+          totalEarnings: earnings.toFixed(2),
+          weeklyPercentage: weeklyPercentage.toFixed(2),
+          isSuspended: true,
+        };
+      }
+
+      // For active accounts, subtract suspended days but add bonus days
+      const activeDays =
+        calendarDays - totalSuspendedDays + bonusDays + dayFraction;
+
+      // Check if plan has ended based on active days
+      if (activeDays >= planDetails.duration * 30) {
         return {
           mainBalance: (investment * (1 + planDetails.roi / 100)).toFixed(2),
           dailyEarning: 0,
@@ -506,30 +580,68 @@ export default function BalanceCharts({ userId }) {
         };
       }
 
-      const millisecondsPassed = now - start;
-      const secondsPassed = millisecondsPassed / 1000;
+      // Regular calculation for active accounts with real-time updates
       const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
-      const secondlyROI = dailyROI / (24 * 60 * 60);
       const dailyBonusRate = planDetails.dailyBonus / 100;
-      const secondlyBonus = dailyBonusRate / (24 * 60 * 60);
-      const roiEarnings = investment * secondlyROI * secondsPassed;
-      const bonusEarnings = investment * secondlyBonus * secondsPassed;
-      const totalEarnings = roiEarnings + bonusEarnings;
-      const weeklyROI = dailyROI * 7 * 100;
-      const weeklyBonus = dailyBonusRate * 7 * 100;
-      const weeklyPercentage = weeklyROI + weeklyBonus;
+      const totalDailyRate = dailyROI + dailyBonusRate;
+
+      const earnings = investment * totalDailyRate * activeDays;
+      const weeklyPercentage = (dailyROI + dailyBonusRate) * 7 * 100;
 
       return {
-        mainBalance: (investment + totalEarnings).toFixed(2),
+        mainBalance: (investment + earnings).toFixed(2),
         dailyEarning: (investment * dailyROI).toFixed(2),
         dailyBonus: (investment * dailyBonusRate).toFixed(2),
-        totalEarnings: totalEarnings.toFixed(2),
+        totalEarnings: earnings.toFixed(2),
         weeklyPercentage: weeklyPercentage.toFixed(2),
         isComplete: false,
       };
     },
     []
   );
+
+  // Add this function at the top level to calculate active investment days
+  const calculateActiveDays = (startDate, suspensionHistory = []) => {
+    const start = new Date(startDate);
+    const today = new Date();
+    const totalCalendarDays = Math.floor(
+      (today - start) / (1000 * 60 * 60 * 24)
+    );
+
+    // If no suspension history, all days are active
+    if (!suspensionHistory || suspensionHistory.length === 0) {
+      return {
+        calendarDays: totalCalendarDays,
+        activeDays: totalCalendarDays,
+        suspendedDays: 0,
+      };
+    }
+
+    let suspendedDays = 0;
+
+    // Calculate total suspended days
+    suspensionHistory.forEach((period) => {
+      const suspendStart = new Date(period.suspendedDate);
+      // If still suspended, use today as end date
+      const suspendEnd = period.reactivatedDate
+        ? new Date(period.reactivatedDate)
+        : today;
+
+      // Only count if suspension started after account start date
+      if (suspendStart >= start) {
+        const periodDays = Math.floor(
+          (suspendEnd - suspendStart) / (1000 * 60 * 60 * 24)
+        );
+        suspendedDays += periodDays;
+      }
+    });
+
+    return {
+      calendarDays: totalCalendarDays,
+      activeDays: totalCalendarDays - suspendedDays,
+      suspendedDays,
+    };
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -546,6 +658,23 @@ export default function BalanceCharts({ userId }) {
         if (!userResponse?.items?.length) return;
 
         const userData = userResponse.items[0].fields;
+
+        // Check account status
+        if (
+          userData.accountStatus === "Suspended" ||
+          userData.accountStatus === "Pending"
+        ) {
+          setUserData({ ...userData });
+          setIsLoading(false);
+          return; // Stop further processing for suspended/pending accounts
+        }
+
+        // Get suspension data and bonus days
+        const totalSuspendedDays = userData.totalSuspendedDays || 0;
+        const bonusDays = userData.bonusDays || 0; // Get bonus days from user data
+        const lastSuspensionDate = userData.lastSuspensionDate || null;
+
+        // Rest of the existing code for active accounts
         const planType = userData.currentPlan
           .toLowerCase()
           .replace(" plan", "")
@@ -576,31 +705,53 @@ export default function BalanceCharts({ userId }) {
         const initialBalances = calculateRealTimeBalances(
           totalInvestment,
           userData.startDate,
-          planDetails
+          planDetails,
+          userData.accountStatus,
+          lastSuspensionDate,
+          totalSuspendedDays,
+          bonusDays // Pass bonus days
         );
+
         setRealTimeBalances(initialBalances);
+
         setUserData({ ...userData, transactions, totalInvestment });
 
         const stats = generateDailyStats(
           totalInvestment,
           userData.startDate,
-          planDetails
+          planDetails,
+          totalSuspendedDays
         );
         setDailyStats(stats);
 
-        const updateInterval = setInterval(() => {
-          const newBalances = calculateRealTimeBalances(
-            totalInvestment,
-            userData.startDate,
-            planDetails
-          );
-          if (newBalances.isComplete) {
-            clearInterval(updateInterval);
-          }
-          setRealTimeBalances(newBalances);
-        }, 1000);
+        const planDates = calculatePlanDates(
+          userData.startDate,
+          planDetails.duration,
+          totalSuspendedDays,
+          bonusDays // Pass bonus days
+        );
 
-        return () => clearInterval(updateInterval);
+        // Only set up interval updates if account is active
+        if (userData.accountStatus === "Active") {
+          const updateInterval = setInterval(() => {
+            const newBalances = calculateRealTimeBalances(
+              totalInvestment,
+              userData.startDate,
+              planDetails,
+              userData.accountStatus,
+              lastSuspensionDate,
+              totalSuspendedDays,
+              bonusDays // Add bonusDays here too
+            );
+
+            if (newBalances.isComplete) {
+              clearInterval(updateInterval);
+            }
+
+            setRealTimeBalances(newBalances);
+          }, 100); // Update more frequently for smoother real-time effect
+          return () => clearInterval(updateInterval);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -613,16 +764,67 @@ export default function BalanceCharts({ userId }) {
 
   if (isLoading) return <div></div>;
 
-  const planDates = calculatePlanDates(
-    userData.startDate,
-    investmentPlans[userData.accountType][
-      userData.currentPlan
-        .toLowerCase()
-        .replace(" plan", "")
-        .replace("joint ", "")
-    ].duration
-  );
+  // Add status-based rendering with suspension reason
+  if (userData?.accountStatus === "Suspended") {
+    return (
+      <div className="p-6 bg-red-50 rounded-xl border border-red-200 shadow-md">
+        <div className="flex items-start space-x-3">
+          <FaExclamationTriangle className="text-red-600 mt-1 flex-shrink-0 h-5 w-5" />
+          <div>
+            <h2 className="text-xl font-bold text-red-700 mb-2">
+              Account Suspended
+            </h2>
+            <p className="text-red-600 mb-3">
+              {userData.suspensionReason ||
+                "Your account has been suspended. Please contact customer support for assistance."}
+            </p>
+            {userData.totalSuspendedDays > 0 && (
+              <div className="mt-2 pt-2 border-t border-red-200">
+                <p className="text-sm text-red-500">
+                  Total suspended days:{" "}
+                  <span className="font-semibold">
+                    {userData.totalSuspendedDays}
+                  </span>
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
+  if (userData?.accountStatus === "Pending") {
+    return (
+      <div className="p-6 bg-yellow-50 rounded-xl border border-yellow-200 shadow-md">
+        <h2 className="text-xl font-bold text-yellow-700 mb-3">
+          Account Pending Activation
+        </h2>
+        <p className="text-yellow-600">
+          Your account is pending activation. This usually takes 24-48 hours.
+          Please check back later or contact support if it's been longer.
+        </p>
+      </div>
+    );
+  }
+
+  // Only calculate plan dates for active accounts with all required data
+  const planDates =
+    userData?.startDate && userData?.accountType && userData?.currentPlan
+      ? calculatePlanDates(
+          userData.startDate,
+          investmentPlans[userData.accountType][
+            userData.currentPlan
+              .toLowerCase()
+              .replace(" plan", "")
+              .replace("joint ", "")
+          ].duration,
+          userData.totalSuspendedDays || 0,
+          userData.bonusDays || 0
+        )
+      : null;
+
+  // Original return for active accounts
   return (
     <div key="balance-charts-container" className="p-2 space-y-3">
       <BalanceCards
@@ -639,13 +841,13 @@ export default function BalanceCharts({ userId }) {
             key="earnings-button"
             onClick={() => setActiveChart("earnings")}
             className={`flex-1 p-2 rounded-lg text-white text-sm font-semibold 
-            bg-gradient-to-r from-red-700 via-red-600 to-red-700 
-            shadow-lg shadow-red-500/30 transition-all duration-300
-            ${
-              activeChart === "earnings"
-                ? "scale-105 ring-2 ring-red-400"
-                : "opacity-90"
-            }`}
+        bg-gradient-to-r from-red-700 via-red-600 to-red-700 
+        shadow-lg shadow-red-500/30 transition-all duration-300
+        ${
+          activeChart === "earnings"
+            ? "scale-105 ring-2 ring-red-400"
+            : "opacity-90"
+        }`}
           >
             Earnings Overview
           </button>
@@ -653,13 +855,13 @@ export default function BalanceCharts({ userId }) {
             key="balance-button"
             onClick={() => setActiveChart("balance")}
             className={`flex-1 p-2 rounded-lg text-white text-sm font-semibold 
-            bg-gradient-to-r from-red-700 via-red-600 to-red-700 
-            shadow-lg shadow-red-500/30 transition-all duration-300
-            ${
-              activeChart === "balance"
-                ? "scale-105 ring-2 ring-red-400"
-                : "opacity-90"
-            }`}
+        bg-gradient-to-r from-red-700 via-red-600 to-red-700 
+        shadow-lg shadow-red-500/30 transition-all duration-300
+        ${
+          activeChart === "balance"
+            ? "scale-105 ring-2 ring-red-400"
+            : "opacity-90"
+        }`}
           >
             Balance Overview
           </button>
