@@ -227,8 +227,8 @@ export default function HomePlans() {
     const daysInPeriod = plan.duration * 30;
     const totalDailyReturns = dailyReturn * daysInPeriod;
   
-    // Base ROI (200% for all plans)
-    const baseROI = principal * 2; // Changed from 1.5 to 2 for 200% ROI
+    // Base ROI (100% for all plans)
+    const baseROI = principal * 1; // Changed from 1.5 to 2 for 100% ROI
   
     // Add joint bonus if applicable
     if (plan.accountType === "joint" || plan.accountType === "Joint") {

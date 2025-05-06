@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaLock, FaUnlock, FaExclamationTriangle, FaArrowRight, FaBitcoin, FaEthereum, FaWallet, FaInfoCircle, FaCheckCircle } from 'react-icons/fa';
@@ -23,10 +22,8 @@ const calculateRealTimeBalances = (
   // Use current timestamp for real-time calculations
   const now = new Date();
   const start = new Date(startDate);
-
   // Calculate calendar days since account started
   const calendarDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-
   // Add milliseconds for real-time updates
   const millisecondsPassed = now - start;
   const dayFraction =
@@ -39,18 +36,14 @@ const calculateRealTimeBalances = (
     const daysUntilSuspension = Math.floor(
       (suspensionDate - start) / (1000 * 60 * 60 * 24)
     );
-
     // Keep original suspension logic but add bonus days
     const activeDays = daysUntilSuspension - totalSuspendedDays + bonusDays;
-
     // Calculate earnings based on active days only
     const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
     const dailyBonusRate = planDetails.dailyBonus / 100;
     const totalDailyRate = dailyROI + dailyBonusRate;
-
     const earnings = investment * totalDailyRate * activeDays;
     const weeklyPercentage = (dailyROI + dailyBonusRate) * 7 * 100;
-
     return {
       mainBalance: (investment + earnings).toFixed(2),
       dailyEarning: (investment * dailyROI).toFixed(2),
@@ -81,7 +74,6 @@ const calculateRealTimeBalances = (
   const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
   const dailyBonusRate = planDetails.dailyBonus / 100;
   const totalDailyRate = dailyROI + dailyBonusRate;
-
   const earnings = investment * totalDailyRate * activeDays;
   const weeklyPercentage = (dailyROI + dailyBonusRate) * 7 * 100;
 
@@ -103,21 +95,16 @@ const calculatePlanDates = (
 ) => {
   const start = new Date(startDate);
   const today = new Date();
-
   const calendarDays = Math.floor((today - start) / (1000 * 60 * 60 * 24));
-
   // Subtract suspended days but add bonus days
   const activeDays = Math.max(0, calendarDays - totalSuspendedDays + bonusDays);
-
   // Adjust end date to account for both suspended days and bonus days
   const adjustedEndDate = new Date(
     start.getTime() +
       (planDuration * 30 + totalSuspendedDays - bonusDays) * 24 * 60 * 60 * 1000
   );
-
   const totalDays = planDuration * 30;
   const daysRemaining = Math.max(0, totalDays - activeDays);
-
   return {
     startDate: start.toLocaleDateString(),
     endDate: adjustedEndDate.toLocaleDateString(),
@@ -136,12 +123,12 @@ const withdrawalRules = [
   },
   {
     title: "Early Withdrawal - 50%",
-    description: "Pay 5% fee to unlock 50% of current balance",
+    description: "Pay 20% fee to unlock 50% of current balance",
     icon: FaUnlock
   },
   {
     title: "Early Termination",
-    description: "Pay 10% fee to withdraw entire balance and close investment",
+    description: "Pay 40% fee to withdraw entire balance and close investment",
     icon: FaLock
   }
 ];
@@ -185,23 +172,28 @@ export default function WithdrawalPage() {
           'fields.email': user.email,
           include: 3,
         });
-
         if (!userResponse?.items?.length) return;
         
-        const userData = userResponse.items[0].fields;
-        setUserData(userData);
-        setAccountStatus(userData.accountStatus || "Active");
+        const userFields = userResponse.items[0].fields;
+        // Store the complete user data including sys.id
+        setUserData({
+          ...userFields,
+          sys: {
+            id: userResponse.items[0].sys.id
+          }
+        });
+        setAccountStatus(userFields.accountStatus || "Active");
         
         // Add error handling for plan type extraction
         let planType = "";
         try {
-          planType = userData.currentPlan.toLowerCase().replace(" plan", "").replace("joint ", "");
+          planType = userFields.currentPlan.toLowerCase().replace(" plan", "").replace("joint ", "");
         } catch (err) {
           console.error("Error processing plan type:", err);
           return; // Exit if we can't process the plan type
         }
         
-        const accountType = userData.accountType || "individual"; // Default to individual if not specified
+        const accountType = userFields.accountType || "individual"; // Default to individual if not specified
         
         // Check if the plan exists before trying to access it
         if (!investmentPlans[accountType] || !investmentPlans[accountType][planType]) {
@@ -210,11 +202,10 @@ export default function WithdrawalPage() {
         }
         
         const planDetails = investmentPlans[accountType][planType];
-
         // Get suspension data and bonus days
-        const totalSuspendedDays = userData.totalSuspendedDays || 0;
-        const bonusDays = userData.bonusDays || 0;
-        const lastSuspensionDate = userData.lastSuspensionDate || null;
+        const totalSuspendedDays = userFields.totalSuspendedDays || 0;
+        const bonusDays = userFields.bonusDays || 0;
+        const lastSuspensionDate = userFields.lastSuspensionDate || null;
 
         const transactionsResponse = await client.getEntries({
           content_type: "transaction",
@@ -236,21 +227,24 @@ export default function WithdrawalPage() {
         // Use the updated calculation function
         const balances = calculateRealTimeBalances(
           totalInvestment,
-          userData.startDate,
+          userFields.startDate,
           planDetails,
-          userData.accountStatus,
+          userFields.accountStatus,
           lastSuspensionDate,
           totalSuspendedDays,
           bonusDays
         );
 
         setCurrentBalance(parseFloat(balances.mainBalance));
-        setUnlockFee(parseFloat(balances.mainBalance) * 0.05);
-        setTerminationFee(parseFloat(balances.mainBalance) * 0.10);
+        
+        // Updated fee calculations
+        const partialAmount = parseFloat(balances.mainBalance) * 0.5;
+        setUnlockFee(partialAmount * 0.2); // 20% of the 50% available
+        setTerminationFee(parseFloat(balances.mainBalance) * 0.4); // 40% of total balance
 
         // Calculate plan dates with suspended and bonus days
         const planDates = calculatePlanDates(
-          userData.startDate,
+          userFields.startDate,
           planDetails.duration,
           totalSuspendedDays,
           bonusDays
@@ -263,17 +257,20 @@ export default function WithdrawalPage() {
         const updateInterval = setInterval(() => {
           const newBalances = calculateRealTimeBalances(
             totalInvestment,
-            userData.startDate,
+            userFields.startDate,
             planDetails,
-            userData.accountStatus,
+            userFields.accountStatus,
             lastSuspensionDate,
             totalSuspendedDays,
             bonusDays
           );
           
           setCurrentBalance(parseFloat(newBalances.mainBalance));
-          setUnlockFee(parseFloat(newBalances.mainBalance) * 0.05);
-          setTerminationFee(parseFloat(newBalances.mainBalance) * 0.10);
+          
+          // Update fees with new calculations
+          const newPartialAmount = parseFloat(newBalances.mainBalance) * 0.5;
+          setUnlockFee(newPartialAmount * 0.2);
+          setTerminationFee(parseFloat(newBalances.mainBalance) * 0.4);
           
           if (newBalances.isComplete) {
             clearInterval(updateInterval);
@@ -281,7 +278,6 @@ export default function WithdrawalPage() {
         }, 1000);
 
         return () => clearInterval(updateInterval);
-
       } catch (error) {
         console.error("Error fetching balance data:", error);
       }
@@ -293,24 +289,36 @@ export default function WithdrawalPage() {
   const handleWithdrawalSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+    
     try {
+      // Validate that userData exists and has the necessary properties
+      if (!userData || !userData.sys || !userData.sys.id) {
+        throw new Error("User data is not properly loaded");
+      }
+      
       const withdrawal = {
         fields: {
           type: "WITHDRAWAL",
           amount: parseFloat(withdrawalForm.amount),
           status: "PENDING",
           timestamp: new Date().toISOString(),
-          user: { sys: { id: userData.sys.id } },
+          user: { 
+            sys: { 
+              type: "Link",
+              linkType: "Entry",
+              id: userData.sys.id 
+            } 
+          },
           crypto: withdrawalForm.crypto,
           walletAddress: withdrawalForm.walletAddress
         }
       };
-
+      
       await client.createEntry("transaction", withdrawal);
       setShowConfirmation(true);
     } catch (error) {
       console.error("Withdrawal error:", error);
+      alert("There was an error processing your withdrawal. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -354,7 +362,6 @@ export default function WithdrawalPage() {
             onChange={(e) => setWithdrawalForm({...withdrawalForm, amount: e.target.value})}
           />
         </div>
-
         <div className="space-y-2">
           <label className="text-sm font-bold text-gray-900">Select Cryptocurrency</label>
           <select
@@ -371,7 +378,6 @@ export default function WithdrawalPage() {
             ))}
           </select>
         </div>
-
         <div className="space-y-2">
           <label className="text-sm font-bold text-gray-900">Wallet Address</label>
           <input
@@ -382,7 +388,6 @@ export default function WithdrawalPage() {
             onChange={(e) => setWithdrawalForm({...withdrawalForm, walletAddress: e.target.value})}
           />
         </div>
-
         <button
           type="submit"
           disabled={loading}
@@ -405,16 +410,17 @@ export default function WithdrawalPage() {
           <h3 className="text-xl font-bold text-gray-900">Partial Withdrawal</h3>
           <FaUnlock className="text-2xl text-red-600" />
         </div>
-
         <div className="space-y-3 text-gray-900">
-          <p className="font-medium">
-            Unlock Fee (5%): <span className="font-bold text-red-600">${unlockFee.toLocaleString()}</span>
-          </p>
           <p className="font-medium">
             Available (50%): <span className="font-bold text-green-600">${(currentBalance * 0.5).toLocaleString()}</span>
           </p>
+          <p className="font-medium">
+            Unlock Fee (20%): <span className="font-bold text-red-600">${unlockFee.toLocaleString()}</span>
+          </p>
+          <p className="font-medium">
+            You Receive: <span className="font-bold text-blue-600">${((currentBalance * 0.5) - unlockFee).toLocaleString()}</span>
+          </p>
         </div>
-
         <Link
           href={`/dashboard/${params.userId}/deposits?amount=${unlockFee}&purpose=unlock`}
           className="mt-6 block w-full py-3 text-center font-bold text-white rounded-lg bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900"
@@ -422,7 +428,6 @@ export default function WithdrawalPage() {
           Pay Unlock Fee
         </Link>
       </motion.div>
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -432,16 +437,17 @@ export default function WithdrawalPage() {
           <h3 className="text-xl font-bold text-gray-900">Full Termination</h3>
           <FaLock className="text-2xl text-red-800" />
         </div>
-
         <div className="space-y-3 text-gray-900">
-          <p className="font-medium">
-            Termination Fee (10%): <span className="font-bold text-red-600">${terminationFee.toLocaleString()}</span>
-          </p>
           <p className="font-medium">
             Available (100%): <span className="font-bold text-green-600">${currentBalance.toLocaleString()}</span>
           </p>
+          <p className="font-medium">
+            Termination Fee (40%): <span className="font-bold text-red-600">${terminationFee.toLocaleString()}</span>
+          </p>
+          <p className="font-medium">
+            You Receive: <span className="font-bold text-blue-600">${(currentBalance - terminationFee).toLocaleString()}</span>
+          </p>
         </div>
-
         <Link
           href={`/dashboard/${params.userId}/deposits?amount=${terminationFee}&purpose=termination`}
           className="mt-6 block w-full py-3 text-center font-bold text-white rounded-lg bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900"
@@ -460,8 +466,8 @@ export default function WithdrawalPage() {
         <div>
           <h3 className="text-xl font-bold text-red-700 mb-2">Account Suspended</h3>
           <p className="text-red-600 mb-4">
-            {userData?.suspensionReason || 
-             "Your account is currently suspended. Withdrawals are not available until your account is reactivated."}
+            {userData?.suspensionReason ||
+              "Your account is currently suspended. Withdrawals are not available until your account is reactivated."}
           </p>
           <p className="text-sm text-red-500">
             Please contact customer support for assistance.
@@ -477,7 +483,6 @@ export default function WithdrawalPage() {
         <title>Withdraw Funds | Investment Platform</title>
         <meta name="description" content="Secure withdrawal system for your investments" />
       </Head>
-
       <div className="mx-auto p-2 space-y-2">
         <div className="bg-gradient-to-r from-red-900 via-red-800 to-black p-6 rounded-xl shadow-xl">
           <h1 className="text-3xl font-bold text-white mb-2">Withdraw Funds</h1>
@@ -491,9 +496,7 @@ export default function WithdrawalPage() {
             )}
           </p>
         </div>
-
         {renderWithdrawalRules()}
-
         {accountStatus === "Suspended" ? (
           renderSuspendedMessage()
         ) : isPlanComplete ? (
@@ -511,14 +514,13 @@ export default function WithdrawalPage() {
             {renderEarlyWithdrawalOptions()}
           </>
         )}
-
         <AnimatePresence>
           {showConfirmation && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
+              className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
             >
               <motion.div
                 initial={{ scale: 0.9 }}

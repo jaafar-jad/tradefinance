@@ -94,7 +94,7 @@ export default function InvestmentActivePlansPage() {
       {/* Investment Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         {[
-          { icon: FaRocket, label: 'ROI', value: '200%' },
+          { icon: FaRocket, label: 'ROI', value: '100%' },
           { icon: FaDollarSign, label: 'Min Investment', value: '$500' },
           { icon: FaPercent, label: 'Daily Bonus', value: '0.15-0.40%' },
           { icon: FaClock, label: 'Duration', value: '2-6 Months' }

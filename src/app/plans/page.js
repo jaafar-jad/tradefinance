@@ -229,8 +229,8 @@ export default function Plans() {
     const daysInPeriod = plan.duration * 30;
     const totalDailyReturns = dailyReturn * daysInPeriod;
   
-    // Base ROI (200% for all plans)
-    const baseROI = principal * 2; // Changed from 1.5 to 2 for 200% ROI
+    // Base ROI (100% for all plans)
+    const baseROI = principal * 2; // Changed from 1.5 to 2 for 100% ROI
   
     // Add joint bonus if applicable
     if (plan.accountType === "joint" || plan.accountType === "Joint") {
@@ -250,7 +250,7 @@ export default function Plans() {
         </title>
         <meta
           name="description"
-          content="Explore Trade Finance's diverse investment plans with ROIs up to 200%. Choose from Single and joint plans starting from $100. Calculate potential returns with our investment calculator."
+          content="Explore Trade Finance's diverse investment plans with ROIs up to 100%. Choose from Single and joint plans starting from $100. Calculate potential returns with our investment calculator."
         />
 
         {/* Open Graph */}
