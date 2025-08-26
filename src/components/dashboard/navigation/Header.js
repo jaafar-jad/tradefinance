@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { client } from "@/lib/contentful";
@@ -41,7 +39,6 @@ export default function Headerr({ onMenuClick, onRightMenuClick }) {
       : "/avatarmale.jpeg";
   };
 
-  // NEW: Refactored function to calculate based on multiple deposits
   const calculateRealTimeBalances = useCallback(
     (deposits, accountStatus, planDetails, lastSuspensionDate, totalSuspendedDays = 0, bonusDays = 0) => {
       if (!deposits || deposits.length === 0 || !planDetails?.duration) {
@@ -55,7 +52,6 @@ export default function Headerr({ onMenuClick, onRightMenuClick }) {
         };
       }
 
-      // Calculate for each deposit and sum the results
       let totalMainBalance = 0;
       let totalDailyEarning = 0;
       let totalDailyBonus = 0;
@@ -70,7 +66,7 @@ export default function Headerr({ onMenuClick, onRightMenuClick }) {
       deposits.forEach(deposit => {
         const start = new Date(deposit.fields.timestamp);
         let activeDays;
-        
+
         if (accountStatus === "Suspended" && lastSuspensionDate) {
           const suspensionDate = new Date(lastSuspensionDate);
           const daysUntilSuspension = Math.floor((suspensionDate - start) / (1000 * 60 * 60 * 24));
@@ -127,7 +123,7 @@ export default function Headerr({ onMenuClick, onRightMenuClick }) {
         if (!userResponse.items.length) throw new Error("User profile not found");
 
         const userData = userResponse.items[0].fields;
-
+        const linkedTransactions = userData.transactions;
         const totalSuspendedDays = userData.totalSuspendedDays || 0;
         const bonusDays = userData.bonusDays || 0;
         const lastSuspensionDate = userData.lastSuspensionDate || null;
@@ -154,15 +150,11 @@ export default function Headerr({ onMenuClick, onRightMenuClick }) {
           return;
         }
 
-        const transactionsResponse = await client.getEntries({
-          content_type: "transaction",
-          "fields.user.sys.id": userResponse.items[0].sys.id,
-          "fields.type": "DEPOSIT",
-          "fields.status": "COMPLETED", // Only include completed deposits
-          order: "-fields.timestamp",
-        });
+        // Filter the already-fetched transactions to get only completed deposits
+        const deposits = linkedTransactions.filter(tx => 
+          tx.fields.type === "DEPOSIT" && tx.fields.status === "COMPLETED"
+        );
 
-        const deposits = transactionsResponse.items;
         const totalInvestment = deposits.reduce((sum, tx) => sum + tx.fields.amount, 0);
 
         const planType = userData.currentPlan?.toLowerCase()
@@ -179,7 +171,7 @@ export default function Headerr({ onMenuClick, onRightMenuClick }) {
         setUserProfile({
           ...userData,
           totalInvestment,
-          transactions: transactionsResponse.items,
+          transactions: deposits, // Use the filtered deposits for the userProfile state
           accountStatus,
           suspensionReason
         });
@@ -325,7 +317,7 @@ export default function Headerr({ onMenuClick, onRightMenuClick }) {
                                 <h3 className="text-sm font-bold">
                                   {userProfile?.currentPlan}
                                 </h3>
-                               
+                                
                               </div>
                               <FaWallet className="h-6 w-6" />
                             </div>
@@ -408,10 +400,10 @@ export default function Headerr({ onMenuClick, onRightMenuClick }) {
                           <p className="text-sm text-gray-500">
                             {userProfile?.email || "Loading..."}
                           </p>
-                         
+                          
                         </div>
                       </div>
-                     
+                      
                     </div>
                     <div className="py-2">
                       <Link

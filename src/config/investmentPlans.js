@@ -35,7 +35,7 @@ export  const investmentPlans = {
       maxAmount: 4999,
       roi: 200,
       duration: 6,
-      dailyBonus: 0.20, // 0.20% daily ≈ 36% over 6 months
+      dailyBonus: 0, // 0.20% daily ≈ 36% over 6 months
       accountType: "joint",
       jointBonus: 25
     },
