@@ -12,6 +12,7 @@
     "@emailjs/browser": "^4.4.1",
     "@react-email/components": "^0.0.31",
     "contentful": "^11.2.5",
+    "contentful-management": "^11.54.4",
     "emailjs-com": "^3.2.0",
     "framer-motion": "^11.11.17",
     "jsonwebtoken": "^9.0.2",
