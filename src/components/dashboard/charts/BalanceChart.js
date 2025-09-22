@@ -71,23 +71,24 @@ export const generateDailyStats = (
   const dailyROI = planDetails.roi / totalDays / 100;
   const dailyBonusRate = planDetails.dailyBonus / 100;
   const totalDailyRate = dailyROI + dailyBonusRate;
-  
-  const today = new Date();
 
   for (let day = 1; day <= totalDays; day++) {
     const dayData = {
       day: `Day ${day}`,
       earnings: 0,
-      balance: 0
+      balance: 0,
     };
-    
-    deposits.forEach(deposit => {
+
+    deposits.forEach((deposit) => {
       const start = new Date(deposit.timestamp);
-      const daysSinceDeposit = Math.floor((new Date(start.getTime() + day * 24 * 60 * 60 * 1000) - start) / (1000 * 60 * 60 * 24));
-      
+      const daysSinceDeposit = Math.floor(
+        (new Date(start.getTime() + day * 24 * 60 * 60 * 1000) - start) /
+          (1000 * 60 * 60 * 24)
+      );
+
       const earnings = deposit.amount * totalDailyRate * daysSinceDeposit;
       const balance = deposit.amount + earnings;
-      
+
       dayData.earnings += Math.max(0, earnings);
       dayData.balance += Math.max(0, balance);
     });
@@ -98,71 +99,180 @@ export const generateDailyStats = (
   return stats;
 };
 
+// --- Sliding Notification Component ---
+
+const SlidingNotification = ({ notification }) => {
+  if (!notification) return null;
+
+  const fullMessage = notification;
+
+  const marqueeVariants = {
+    animate: {
+      x: ["0%", "-100%"],
+      transition: {
+        x: {
+          repeat: Infinity,
+          repeatType: "loop",
+          duration: 20,
+          ease: "linear",
+        },
+      },
+    },
+  };
+
+  return (
+    <div className="relative w-full overflow-hidden bg-green-100 rounded-xl border-1-4 border-green-500 shadow-lg ">
+      <div className="flex items-center p-2">
+        <FaExclamationTriangle className="text-green-500 mr-3 flex-shrink-0" />
+        <div className="flex-1 overflow-hidden">
+          <motion.div
+            className="whitespace-nowrap flex"
+            variants={marqueeVariants}
+            animate="animate"
+          >
+            <span className="text-sm font-semibold text-green-800">
+              {fullMessage}
+            </span>
+            <span className="text-sm font-semibold text-green-800 pl-8">
+              {fullMessage}
+            </span>
+             <span className="text-sm font-semibold text-green-800 pl-8">
+              {fullMessage}
+            </span>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Transaction Modal Component ---
 
-const TransactionModal = ({ show, onClose, deposits, planDetails, totalSuspendedDays, bonusDays }) => {
-    if (!show) return null;
+const TransactionModal = ({
+  show,
+  onClose,
+  deposits,
+  planDetails,
+  totalSuspendedDays,
+  bonusDays,
+}) => {
+  if (!show) return null;
 
-    const calculateIndividualEarnings = (deposit) => {
-        const start = new Date(deposit.timestamp);
-        const now = new Date();
-        const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
-        const dailyBonusRate = planDetails.dailyBonus / 100;
-        const totalDailyRate = dailyROI + dailyBonusRate;
+  const calculateIndividualEarnings = (deposit) => {
+    const start = new Date(deposit.timestamp);
+    const now = new Date();
+    const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
+    const dailyBonusRate = planDetails.dailyBonus / 100;
+    const totalDailyRate = dailyROI + dailyBonusRate;
 
-        const millisecondsPassed = now - start;
-        const dayFraction = millisecondsPassed / (1000 * 60 * 60 * 24) - Math.floor(millisecondsPassed / (1000 * 60 * 60 * 24));
-        const calendarDays = Math.floor(millisecondsPassed / (1000 * 60 * 60 * 24));
-        const activeDays = Math.max(0, calendarDays - totalSuspendedDays + bonusDays + dayFraction);
-        
-        return (deposit.amount * totalDailyRate * activeDays).toFixed(2);
-    };
-
-    return (
-        <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-center p-4">
-            <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 relative"
-            >
-                <button onClick={onClose} className="absolute top-3 right-3 text-gray-500 hover:text-gray-800">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-                <h2 className="text-xl font-bold text-red-700 mb-4">Investment Transactions</h2>
-                <div className="space-y-4 max-h-96 overflow-y-auto">
-                    {deposits.length > 0 ? (
-                        deposits.map((deposit, index) => (
-                            <div key={index} className="border-b border-gray-200 pb-4 last:border-b-0">
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className="font-semibold text-gray-800">Deposit: ${deposit.amount.toFixed(2)}</span>
-                                    <span className="text-sm text-gray-500">{new Date(deposit.timestamp).toLocaleDateString()}</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-sm text-gray-600">Earnings: ${calculateIndividualEarnings(deposit)}</span>
-                                    <div className="flex items-center text-sm text-gray-500">
-                                        <div className="w-16 h-1.5 bg-gray-200 rounded-full mr-2">
-                                            <div
-                                                className="h-full rounded-full bg-green-500"
-                                                style={{ width: `${Math.min(100, ((new Date() - new Date(deposit.timestamp)) / (planDetails.duration * 30 * 24 * 60 * 60 * 1000)) * 100)}%` }}
-                                            ></div>
-                                        </div>
-                                        <span>
-                                            {Math.min(100, ((new Date() - new Date(deposit.timestamp)) / (planDetails.duration * 30 * 24 * 60 * 60 * 1000)) * 100).toFixed(0)}%
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <p className="text-center text-gray-500">No completed deposit transactions found.</p>
-                    )}
-                </div>
-            </motion.div>
-        </div>
+    const millisecondsPassed = now - start;
+    const dayFraction =
+      millisecondsPassed / (1000 * 60 * 60 * 24) -
+      Math.floor(millisecondsPassed / (1000 * 60 * 60 * 24));
+    const calendarDays = Math.floor(millisecondsPassed / (1000 * 60 * 60 * 24));
+    const activeDays = Math.max(
+      0,
+      calendarDays - totalSuspendedDays + bonusDays + dayFraction
     );
+
+    return (deposit.amount * totalDailyRate * activeDays).toFixed(2);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-center p-4">
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 relative"
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <h2 className="text-xl font-bold text-red-700 mb-4">
+          Investment Transactions
+        </h2>
+        <div className="space-y-4 max-h-96 overflow-y-auto">
+          {deposits.length > 0 ? (
+            deposits.map((deposit, index) => (
+              <div
+                key={index}
+                className="border-b border-gray-200 pb-4 last:border-b-0"
+              >
+                <div className="flex justify-between items-start mb-2">
+                  <span className="font-semibold text-gray-800">
+                    Deposit: ${deposit.amount.toFixed(2)}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    {new Date(deposit.timestamp).toLocaleDateString()}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">
+                    Earnings: ${calculateIndividualEarnings(deposit)}
+                  </span>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <div className="w-16 h-1.5 bg-gray-200 rounded-full mr-2">
+                      <div
+                        className="h-full rounded-full bg-green-500"
+                        style={{
+                          width: `${Math.min(
+                            100,
+                            ((new Date() - new Date(deposit.timestamp)) /
+                              (planDetails.duration *
+                                30 *
+                                24 *
+                                60 *
+                                60 *
+                                1000)) *
+                              100
+                          )}%`,
+                        }}
+                      ></div>
+                    </div>
+                    <span>
+                      {Math.min(
+                        100,
+                        ((new Date() - new Date(deposit.timestamp)) /
+                          (planDetails.duration *
+                            30 *
+                            24 *
+                            60 *
+                            60 *
+                            1000)) *
+                          100
+                      ).toFixed(0)}
+                      %
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-500">
+              No completed deposit transactions found.
+            </p>
+          )}
+        </div>
+      </motion.div>
+    </div>
+  );
 };
 
 // --- BalanceCard Component ---
@@ -176,7 +286,7 @@ const BalanceCard = ({
   subtitle,
   planInfo,
   onViewAllInvestments,
-  showViewAllButton
+  showViewAllButton,
 }) => (
   <div
     key={`card-wrapper-${title}`}
@@ -294,12 +404,12 @@ const BalanceCard = ({
           </span>
         </motion.div>
         {showViewAllButton && (
-            <button
-                onClick={onViewAllInvestments}
-                className="bg-red-800 text-white text-xs px-2 py-1 rounded-full hover:bg-red-900 transition-colors"
-            >
-                View all
-            </button>
+          <button
+            onClick={onViewAllInvestments}
+            className="bg-red-800 text-white text-xs px-2 py-1 rounded-full hover:bg-red-900 transition-colors"
+          >
+            View all
+          </button>
         )}
       </div>
     </div>
@@ -575,7 +685,9 @@ const BalanceCards = ({
               >
                 Total Deposits:{" "}
                 {userData?.transactions
-                  ? userData.transactions.filter((tx) => tx.fields.type === "DEPOSIT").length
+                  ? userData.transactions.filter(
+                      (tx) => tx.fields.type === "DEPOSIT"
+                    ).length
                   : 0}
               </span>
             </div>
@@ -594,6 +706,7 @@ export default function BalanceCharts({ userId }) {
   const [isLoading, setIsLoading] = useState(true);
   const [activeChart, setActiveChart] = useState("earnings");
   const [showTransactions, setShowTransactions] = useState(false);
+  const [notification, setNotification] = useState(null); // Updated state for a single notification
   const [realTimeBalances, setRealTimeBalances] = useState({
     mainBalance: 0.0,
     dailyEarning: 0.0,
@@ -603,7 +716,14 @@ export default function BalanceCharts({ userId }) {
   });
 
   const calculateRealTimeBalances = useCallback(
-    (deposits, planDetails, accountStatus, lastSuspensionDate, totalSuspendedDays = 0, bonusDays = 0) => {
+    (
+      deposits,
+      planDetails,
+      accountStatus,
+      lastSuspensionDate,
+      totalSuspendedDays = 0,
+      bonusDays = 0
+    ) => {
       let totalMainBalance = 0;
       let totalEarnings = 0;
 
@@ -623,14 +743,22 @@ export default function BalanceCharts({ userId }) {
           const daysUntilSuspension = Math.floor(
             (suspensionDate - start) / (1000 * 60 * 60 * 24)
           );
-          activeDays = Math.max(0, daysUntilSuspension - totalSuspendedDays + bonusDays);
+          activeDays = Math.max(
+            0,
+            daysUntilSuspension - totalSuspendedDays + bonusDays
+          );
         } else {
           const millisecondsPassed = now - start;
           const dayFraction =
             millisecondsPassed / (1000 * 60 * 60 * 24) -
             Math.floor(millisecondsPassed / (1000 * 60 * 60 * 24));
-          const calendarDays = Math.floor(millisecondsPassed / (1000 * 60 * 60 * 24));
-          activeDays = Math.max(0, calendarDays - totalSuspendedDays + bonusDays + dayFraction);
+          const calendarDays = Math.floor(
+            millisecondsPassed / (1000 * 60 * 60 * 24)
+          );
+          const timeToSubtract = totalSuspendedDays * 24 * 60 * 60 * 1000;
+          const totalDaysActive =
+            (now.getTime() - start.getTime() - timeToSubtract) / (1000 * 60 * 60 * 24);
+          activeDays = Math.max(0, totalDaysActive);
         }
 
         const earnings = deposit.amount * totalDailyRate * activeDays;
@@ -645,7 +773,7 @@ export default function BalanceCharts({ userId }) {
       const dailyEarning = totalInvestment * dailyROI;
       const dailyBonus = totalInvestment * dailyBonusRate;
       const weeklyPercentage = totalDailyRate * 7 * 100;
-      
+
       return {
         mainBalance: totalMainBalance.toFixed(2),
         dailyEarning: dailyEarning.toFixed(2),
@@ -675,21 +803,35 @@ export default function BalanceCharts({ userId }) {
 
         const userData = userResponse.items[0].fields;
 
-        if (userData.accountStatus === "Suspended" || userData.accountStatus === "Pending") {
+        // Corrected: Directly get the notification field from the user data
+        const fetchedNotification = userData.notification || null;
+        setNotification(fetchedNotification);
+
+        if (
+          userData.accountStatus === "Suspended" ||
+          userData.accountStatus === "Pending"
+        ) {
           setUserData({ ...userData });
           setIsLoading(false);
           return;
         }
 
-        const planType = userData.currentPlan.toLowerCase().replace(" plan", "").replace("joint ", "");
+        const planType = userData.currentPlan
+          .toLowerCase()
+          .replace(" plan", "")
+          .replace("joint ", "");
         const accountType = userData.accountType;
         const planDetails = investmentPlans[accountType][planType];
         const totalSuspendedDays = userData.totalSuspendedDays || 0;
         const bonusDays = userData.bonusDays || 0;
         const lastSuspensionDate = userData.lastSuspensionDate || null;
-        
+
         const deposits = (userData.transactions || [])
-          .filter((entry) => entry.fields.type === "DEPOSIT" && entry.fields.status === "COMPLETED")
+          .filter(
+            (entry) =>
+              entry.fields.type === "DEPOSIT" &&
+              entry.fields.status === "COMPLETED"
+          )
           .map((entry) => ({
             amount: entry.fields.amount,
             timestamp: entry.fields.timestamp,
@@ -733,11 +875,11 @@ export default function BalanceCharts({ userId }) {
               totalSuspendedDays,
               bonusDays
             );
-            
+
             if (newBalances.isComplete) {
               clearInterval(updateInterval);
             }
-            
+
             setRealTimeBalances(newBalances);
           }, 100);
           return () => clearInterval(updateInterval);
@@ -748,7 +890,7 @@ export default function BalanceCharts({ userId }) {
         setIsLoading(false);
       }
     };
-    
+
     fetchData();
   }, [userId, calculateRealTimeBalances]);
 
@@ -814,6 +956,9 @@ export default function BalanceCharts({ userId }) {
 
   return (
     <div key="balance-charts-container" className="p-2 space-y-3">
+      {/* Sliding Notification Bar */}
+      <SlidingNotification notification={notification} />
+
       <BalanceCards
         key="balance-cards-component"
         realTimeBalances={realTimeBalances}
@@ -828,28 +973,28 @@ export default function BalanceCharts({ userId }) {
           <button
             key="earnings-button"
             onClick={() => setActiveChart("earnings")}
-            className={`flex-1 p-2 rounded-lg text-white text-sm font-semibold 
-      bg-gradient-to-r from-red-700 via-red-600 to-red-700 
-      shadow-lg shadow-red-500/30 transition-all duration-300
-      ${
-        activeChart === "earnings"
-          ? "scale-105 ring-2 ring-red-400"
-          : "opacity-90"
-      }`}
+            className={`flex-1 p-2 rounded-lg text-white text-sm font-semibold
+        bg-gradient-to-r from-red-700 via-red-600 to-red-700
+        shadow-lg shadow-red-500/30 transition-all duration-300
+        ${
+          activeChart === "earnings"
+            ? "scale-105 ring-2 ring-red-400"
+            : "opacity-90"
+        }`}
           >
             Earnings Overview
           </button>
           <button
             key="balance-button"
             onClick={() => setActiveChart("balance")}
-            className={`flex-1 p-2 rounded-lg text-white text-sm font-semibold 
-      bg-gradient-to-r from-red-700 via-red-600 to-red-700 
-      shadow-lg shadow-red-500/30 transition-all duration-300
-      ${
-        activeChart === "balance"
-          ? "scale-105 ring-2 ring-red-400"
-          : "opacity-90"
-      }`}
+            className={`flex-1 p-2 rounded-lg text-white text-sm font-semibold
+        bg-gradient-to-r from-red-700 via-red-600 to-red-700
+        shadow-lg shadow-red-500/30 transition-all duration-300
+        ${
+          activeChart === "balance"
+            ? "scale-105 ring-2 ring-red-400"
+            : "opacity-90"
+        }`}
           >
             Balance Overview
           </button>
@@ -991,16 +1136,23 @@ export default function BalanceCharts({ userId }) {
         </AnimatePresence>
       </div>
       <AnimatePresence>
-          {showTransactions && (
-              <TransactionModal
-                  show={showTransactions}
-                  onClose={() => setShowTransactions(false)}
-                  deposits={userData?.deposits || []}
-                  planDetails={investmentPlans[userData.accountType][userData.currentPlan.toLowerCase().replace(" plan", "").replace("joint ", "")]}
-                  totalSuspendedDays={userData?.totalSuspendedDays || 0}
-                  bonusDays={userData?.bonusDays || 0}
-              />
-          )}
+        {showTransactions && (
+          <TransactionModal
+            show={showTransactions}
+            onClose={() => setShowTransactions(false)}
+            deposits={userData?.deposits || []}
+            planDetails={
+              investmentPlans[userData.accountType][
+                userData.currentPlan
+                  .toLowerCase()
+                  .replace(" plan", "")
+                  .replace("joint ", "")
+              ]
+            }
+            totalSuspendedDays={userData?.totalSuspendedDays || 0}
+            bonusDays={userData?.bonusDays || 0}
+          />
+        )}
       </AnimatePresence>
     </div>
   );
