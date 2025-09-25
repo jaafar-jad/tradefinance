@@ -276,7 +276,6 @@ const TransactionModal = ({
 };
 
 // --- BalanceCard Component ---
-
 const BalanceCard = ({
   title,
   amount,
@@ -287,134 +286,160 @@ const BalanceCard = ({
   planInfo,
   onViewAllInvestments,
   showViewAllButton,
-}) => (
-  <div
-    key={`card-wrapper-${title}`}
-    className="relative overflow-hidden bg-black/20 rounded-xl shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-red-500/20"
-  >
+}) => {
+  // ✅ Calculate progress if planInfo exists
+  let currentDay = 0;
+  let totalDays = 0;
+  let daysRemaining = 0;
+
+  if (planInfo) {
+    const today = new Date();
+    const startDate = new Date(planInfo.startDate);
+    const endDate = new Date(planInfo.endDate);
+
+    let elapsedDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
+
+    totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+    if (elapsedDays > totalDays) elapsedDays = totalDays;
+
+    daysRemaining = Math.max(0, totalDays - elapsedDays);
+    currentDay = elapsedDays;
+  }
+
+  return (
     <div
-      key={`card-inner-${title}`}
-      className={`bg-gradient-to-br ${color} p-4 h-full rounded-xl border border-white/10`}
+      key={`card-wrapper-${title}`}
+      className="relative overflow-hidden bg-black/20 rounded-xl shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-red-500/20"
     >
       <div
-        key={`overlay-${title}`}
-        className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"
-      />
-      <div
-        key={`content-${title}`}
-        className="relative flex justify-between items-start"
+        key={`card-inner-${title}`}
+        className={`bg-gradient-to-br ${color} p-4 h-full rounded-xl border border-white/10`}
       >
-        <div key={`info-container-${title}`} className="flex-1 min-w-0">
-          <h3
-            key={`title-${title}`}
-            className="font-medium text-xs sm:text-sm md:text-base text-white/90 tracking-wide mb-1"
-          >
-            {title}
-          </h3>
-
-          <motion.div
-            key={`amount-${title}`}
-            className="font-bold text-sm sm:text-lg md:text-2xl text-white tracking-tight"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            $
-            {typeof amount === "number"
-              ? amount.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })
-              : amount}
-          </motion.div>
-
-          {planInfo && (
-            <div key={`plan-info-${title}`} className="mt-3 space-y-2">
-              <div
-                key={`dates-${title}`}
-                className="flex items-center text-[0.65rem] sm:text-xs md:text-sm text-white/80 font-medium"
-              >
-                <span key={`start-date-${title}`}>{planInfo.startDate}</span>
-                <span key={`arrow-${title}`} className="mx-2 text-white/40">
-                  →
-                </span>
-                <span key={`end-date-${title}`}>{planInfo.endDate}</span>
-              </div>
-
-              <div
-                key={`progress-bar-${title}`}
-                className="w-full bg-black/30 rounded-full h-1.5 sm:h-2"
-              >
-                <motion.div
-                  key={`progress-fill-${title}`}
-                  className="bg-gradient-to-r from-green-400 to-emerald-500 h-full rounded-full"
-                  style={{ width: `${planInfo.progress}%` }}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${planInfo.progress}%` }}
-                  transition={{ duration: 1, ease: "easeOut" }}
-                />
-              </div>
-
-              <div
-                key={`days-info-${title}`}
-                className="flex justify-between text-[0.6rem] sm:text-xs md:text-sm text-white/70 font-medium"
-              >
-                <span key={`current-day-${title}`}>
-                  Day {planInfo.currentDay}/{planInfo.totalDays}
-                </span>
-                <span key={`remaining-days-${title}`}>
-                  {planInfo.daysRemaining}d remaining
-                </span>
-              </div>
-            </div>
-          )}
-
-          {subtitle && (
-            <div
-              key={`subtitle-container-${title}`}
-              className="mt-2 space-y-0.5"
+        <div
+          key={`overlay-${title}`}
+          className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"
+        />
+        <div
+          key={`content-${title}`}
+          className="relative flex justify-between items-start"
+        >
+          <div key={`info-container-${title}`} className="flex-1 min-w-0">
+            <h3
+              key={`title-${title}`}
+              className="font-medium text-xs sm:text-sm md:text-base text-white/90 tracking-wide mb-1"
             >
-              {subtitle}
-            </div>
-          )}
+              {title}
+            </h3>
+
+            <motion.div
+              key={`amount-${title}`}
+              className="font-bold text-sm sm:text-lg md:text-2xl text-white tracking-tight"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              $
+              {typeof amount === "number"
+                ? amount.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })
+                : amount}
+            </motion.div>
+
+            {planInfo && (
+              <div key={`plan-info-${title}`} className="mt-3 space-y-2">
+                <div
+                  key={`dates-${title}`}
+                  className="flex items-center text-[0.65rem] sm:text-xs md:text-sm text-white/80 font-medium"
+                >
+                  <span key={`start-date-${title}`}>{planInfo.startDate}</span>
+                  <span key={`arrow-${title}`} className="mx-2 text-white/40">
+                    →
+                  </span>
+                  <span key={`end-date-${title}`}>{planInfo.endDate}</span>
+                </div>
+
+                <div
+                  key={`progress-bar-${title}`}
+                  className="w-full bg-black/30 rounded-full h-1.5 sm:h-2"
+                >
+                  <motion.div
+                    key={`progress-fill-${title}`}
+                    className="bg-gradient-to-r from-green-400 to-emerald-500 h-full rounded-full"
+                    style={{
+                      width: `${(currentDay / totalDays) * 100}%`,
+                    }}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(currentDay / totalDays) * 100}%` }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                  />
+                </div>
+
+                <div
+                  key={`days-info-${title}`}
+                  className="flex justify-between text-[0.6rem] sm:text-xs md:text-sm text-white/70 font-medium"
+                >
+                  <span key={`current-day-${title}`}>
+                    Day {currentDay}/{totalDays}
+                  </span>
+                  <span key={`remaining-days-${title}`}>
+                    {daysRemaining}d remaining
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {subtitle && (
+              <div
+                key={`subtitle-container-${title}`}
+                className="mt-2 space-y-0.5"
+              >
+                {subtitle}
+              </div>
+            )}
+          </div>
+
+          <Icon
+            key={`icon-${title}`}
+            className="text-lg sm:text-xl md:text-2xl text-white/90 ml-3"
+          />
         </div>
 
-        <Icon
-          key={`icon-${title}`}
-          className="text-lg sm:text-xl md:text-2xl text-white/90 ml-3"
-        />
-      </div>
-
-      <div key={`footer-${title}`} className="mt-3 flex items-center justify-between">
-        <motion.div
-          key={`percentage-container-${title}`}
-          className="flex items-center text-[0.65rem] sm:text-xs md:text-sm text-emerald-300 font-semibold"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+        <div
+          key={`footer-${title}`}
+          className="mt-3 flex items-center justify-between"
         >
-          <FaArrowUp
-            key={`arrow-icon-${title}`}
-            className="w-2 h-2 sm:w-3 sm:h-3 mr-1"
-          />
-          {percentage}%
-          <span
-            key={`weekly-return-${title}`}
-            className="text-[0.6rem] sm:text-xs md:text-xs text-white/60 ml-2 font-medium"
+          <motion.div
+            key={`percentage-container-${title}`}
+            className="flex items-center text-[0.65rem] sm:text-xs md:text-sm text-emerald-300 font-semibold"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
           >
-            weekly return
-          </span>
-        </motion.div>
-        {showViewAllButton && (
-          <button
-            onClick={onViewAllInvestments}
-            className="bg-red-800 text-white text-xs px-2 py-1 rounded-full hover:bg-red-900 transition-colors"
-          >
-            View all
-          </button>
-        )}
+            <FaArrowUp
+              key={`arrow-icon-${title}`}
+              className="w-2 h-2 sm:w-3 sm:h-3 mr-1"
+            />
+            {percentage}%
+            <span
+              key={`weekly-return-${title}`}
+              className="text-[0.6rem] sm:text-xs md:text-xs text-white/60 ml-2 font-medium"
+            >
+              weekly return
+            </span>
+          </motion.div>
+          {showViewAllButton && (
+            <button
+              onClick={onViewAllInvestments}
+              className="bg-red-800 text-white text-xs px-2 py-1 rounded-full hover:bg-red-900 transition-colors"
+            >
+              View all
+            </button>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // --- BalanceCards Component ---
 
@@ -715,77 +740,51 @@ export default function BalanceCharts({ userId }) {
     weeklyPercentage: 0.0,
   });
 
-  const calculateRealTimeBalances = useCallback(
-    (
-      deposits,
-      planDetails,
-      accountStatus,
-      lastSuspensionDate,
-      totalSuspendedDays = 0,
-      bonusDays = 0
-    ) => {
-      let totalMainBalance = 0;
-      let totalEarnings = 0;
+  const calculateRealTimeBalances = useCallback((deposits, planDetails) => {
+  let totalMainBalance = 0;
+  let totalEarnings = 0;
+  const now = new Date();
 
-      const now = new Date();
-      const isSuspended = accountStatus === "Suspended";
+  deposits.forEach((deposit) => {
+    const start = new Date(deposit.timestamp);
+    const endDate = new Date(
+      start.getTime() + planDetails.duration * 30 * 24 * 60 * 60 * 1000
+    );
 
-      deposits.forEach((deposit) => {
-        const start = new Date(deposit.timestamp);
-        const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
-        const dailyBonusRate = planDetails.dailyBonus / 100;
-        const totalDailyRate = dailyROI + dailyBonusRate;
+    // ❌ Do not add beyond the plan end date
+    const effectiveDate = now > endDate ? endDate : now;
 
-        let activeDays;
+    const daysActive = Math.max(
+      0,
+      (effectiveDate - start) / (1000 * 60 * 60 * 24)
+    );
 
-        if (isSuspended && lastSuspensionDate) {
-          const suspensionDate = new Date(lastSuspensionDate);
-          const daysUntilSuspension = Math.floor(
-            (suspensionDate - start) / (1000 * 60 * 60 * 24)
-          );
-          activeDays = Math.max(
-            0,
-            daysUntilSuspension - totalSuspendedDays + bonusDays
-          );
-        } else {
-          const millisecondsPassed = now - start;
-          const dayFraction =
-            millisecondsPassed / (1000 * 60 * 60 * 24) -
-            Math.floor(millisecondsPassed / (1000 * 60 * 60 * 24));
-          const calendarDays = Math.floor(
-            millisecondsPassed / (1000 * 60 * 60 * 24)
-          );
-          const timeToSubtract = totalSuspendedDays * 24 * 60 * 60 * 1000;
-          const totalDaysActive =
-            (now.getTime() - start.getTime() - timeToSubtract) / (1000 * 60 * 60 * 24);
-          activeDays = Math.max(0, totalDaysActive);
-        }
+    const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
+    const dailyBonusRate = planDetails.dailyBonus / 100;
+    const totalDailyRate = dailyROI + dailyBonusRate;
 
-        const earnings = deposit.amount * totalDailyRate * activeDays;
-        totalEarnings += earnings;
-        totalMainBalance += deposit.amount + earnings;
-      });
+    const earnings = deposit.amount * totalDailyRate * daysActive;
 
-      const totalInvestment = deposits.reduce((sum, dep) => sum + dep.amount, 0);
-      const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
-      const dailyBonusRate = planDetails.dailyBonus / 100;
-      const totalDailyRate = dailyROI + dailyBonusRate;
-      const dailyEarning = totalInvestment * dailyROI;
-      const dailyBonus = totalInvestment * dailyBonusRate;
-      const weeklyPercentage = totalDailyRate * 7 * 100;
+    totalEarnings += earnings;
+    totalMainBalance += deposit.amount + earnings;
+  });
 
-      return {
-        mainBalance: totalMainBalance.toFixed(2),
-        dailyEarning: dailyEarning.toFixed(2),
-        dailyBonus: dailyBonus.toFixed(2),
-        totalEarnings: totalEarnings.toFixed(2),
-        weeklyPercentage: weeklyPercentage.toFixed(2),
-        isSuspended: isSuspended,
-        isComplete: false,
-      };
-    },
-    []
-  );
+  const totalInvestment = deposits.reduce((sum, dep) => sum + dep.amount, 0);
+
+  const dailyROI = planDetails.roi / (planDetails.duration * 30) / 100;
+  const dailyBonusRate = planDetails.dailyBonus / 100;
+  const dailyEarning = totalInvestment * dailyROI;
+  const dailyBonus = totalInvestment * dailyBonusRate;
+  const weeklyPercentage = (dailyROI + dailyBonusRate) * 7 * 100;
+
+  return {
+    mainBalance: totalMainBalance.toFixed(2),
+    dailyEarning: dailyEarning.toFixed(2),
+    dailyBonus: dailyBonus.toFixed(2),
+    totalEarnings: totalEarnings.toFixed(2),
+    weeklyPercentage: weeklyPercentage.toFixed(2),
+  };
+}, []);
 
   useEffect(() => {
     const fetchData = async () => {
